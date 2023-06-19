@@ -9,7 +9,7 @@ import {
 
 import Rating from "@mui/material/Rating";
 
-const DB_APPDATA_KEY = "AppData/Reviews/ToiletId1/"; // Todo: change to receive toiletid prop
+const DB_APPDATA_KEY = "AppData/";
 const STORAGE_USERUPLOADS_KEY = "user-review-uploads/";
 
 function UploadReview() {
@@ -20,7 +20,10 @@ function UploadReview() {
 
   // functions
   const writeData = (url) => {
-    const PostRef = realTimeDatabaseRef(realTimeDatabase, DB_APPDATA_KEY);
+    const PostRef = realTimeDatabaseRef(
+      realTimeDatabase,
+      DB_APPDATA_KEY + "Reviews/ToiletId1/" // Todo: change to receive toiletid prop
+    );
     const newPostRef = push(PostRef);
 
     set(newPostRef, {

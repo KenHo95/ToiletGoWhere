@@ -37,3 +37,8 @@ label {
   width: 200px;
   height: 200px;
 }
+
+.toilet-list {
+  list-style: none;
+  text-align: left;
+}
