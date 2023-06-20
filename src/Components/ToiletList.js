@@ -10,6 +10,8 @@ import {
   update,
   get,
   child,
+  onChildRemoved,
+  remove,
 } from "firebase/database";
 
 // styling for heart likes
@@ -40,33 +42,70 @@ const DB_APPDATA_KEY = "AppData";
 function ToiletList() {
   const [toiletsData, setToiletsData] = useState([]);
   const [likeInput, setlikeInput] = useState(0);
+  const [UsersLikesData, setUsersLikesData] = useState({});
+
+  // set relevant refs
+  const toiletsDataRef = realTimeDatabaseRef(
+    realTimeDatabase,
+    DB_TOILETDATA_KEY
+  );
+
+  const UsersLikesRef = realTimeDatabaseRef(
+    realTimeDatabase,
+    DB_APPDATA_KEY + "/LikedToilets/UserID3/" // Todo: change to receive UserID prop
+  );
 
   useEffect(() => {
-    const toiletsDataRef = realTimeDatabaseRef(
-      realTimeDatabase,
-      DB_TOILETDATA_KEY
-    );
     onChildAdded(toiletsDataRef, (data) => {
-      // console.log("child added");
+      console.log("toiletsData added");
 
       setToiletsData((prev) => [...prev, { key: data.key, val: data.val() }]);
     });
+
+    onChildAdded(UsersLikesRef, (data) => {
+      console.log("UsersLike added");
+
+      setUsersLikesData((prev) => ({
+        ...prev,
+        [data.key]: data.val(),
+      }));
+    });
+
+    // onChildRemoved(UsersLikesRef, (data) => {
+    //   console.log("child removed");
+    //   console.log(data.key);
+
+    //   // const toiletid = data.key;
+
+    //   delete UsersLikesData[0];
+    // });
+
     return () => {};
   }, []);
 
+  console.log(UsersLikesData);
+
   const writeLikeData = (toiletID, isLiked) => {
-    console.log("writelike");
-    // set ref with relevant toilet id
-    const PostRef = realTimeDatabaseRef(
-      realTimeDatabase,
-      DB_APPDATA_KEY + "/LikedToilets/UserID3/" // Todo: change to receive UserID prop
-    );
+    // console.log("writelike");
 
     // update data to firebase at toiletID ref (computed property name)
-    update(PostRef, {
-      [toiletID]: isLiked === 1 ? true : false,
-    });
+    if (isLiked === 1) {
+      update(UsersLikesRef, {
+        [toiletID]: true,
+      });
+    } else {
+      remove(
+        realTimeDatabaseRef(
+          realTimeDatabase,
+          DB_APPDATA_KEY + `/LikedToilets/UserID3/${toiletID}` // Todo: change to receive UserID prop
+        )
+      );
+
+      // update user like data locally
+      delete UsersLikesData[toiletID];
+    }
   };
+
   // create toilet list from toilet data
   let toiletsListItems = toiletsData.map((toilet) => (
     <div>
@@ -74,7 +113,7 @@ function ToiletList() {
         {/* like button */}
         <StyledRating
           name="customized-color"
-          defaultValue={likeInput}
+          defaultValue={UsersLikesData[toilet.key] === true ? 1 : 0}
           max={1}
           onChange={(event, newValue) => {
             setlikeInput(newValue);
@@ -98,6 +137,7 @@ function ToiletList() {
     // display toilet list
     <div>
       <ol>{toiletsListItems}</ol>
+      {/* {console.log(UsersLikesData)}; */}
     </div>
   );
 }
