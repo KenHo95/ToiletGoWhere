@@ -1,6 +1,8 @@
 //TODO: Update code of that heart stays like after refresh
 
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { realTimeDatabase } from "../firebase";
 import {
   onChildAdded,
@@ -15,9 +17,15 @@ import Rating from "@mui/material/Rating";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
+// styling for toilet button
+import Button from "@mui/material/Button";
+
 // styling for direction button
 import Fab from "@mui/material/Fab";
 import NavigationIcon from "@mui/icons-material/Navigation";
+
+// styling for review button
+import ReviewsIcon from "@mui/icons-material/Reviews";
 
 // styling - color of like hearts
 const StyledRating = styled(Rating)({
@@ -34,9 +42,10 @@ const DB_TOILETDATA_KEY = "ToiletData";
 const DB_APPDATA_KEY = "AppData";
 
 //
-function ToiletList() {
+function ToiletList(props) {
   const [toiletsData, setToiletsData] = useState([]);
   const [UsersLikesData, setUsersLikesData] = useState({});
+  const navigate = useNavigate();
 
   // set relevant refs
   const toiletsDataRef = realTimeDatabaseRef(
@@ -70,15 +79,17 @@ function ToiletList() {
 
   console.log(UsersLikesData);
 
-  const writeLikeData = (toiletID, isLiked) => {
+  const handleLikeButtonClick = (toiletID, isLiked) => {
     // console.log("writelike");
 
     // update data to firebase at toiletID ref (computed property name)
     if (isLiked === 1) {
+      // like
       update(UsersLikesRef, {
         [toiletID]: true,
       });
     } else {
+      // unlike
       remove(
         realTimeDatabaseRef(
           realTimeDatabase,
@@ -101,17 +112,31 @@ function ToiletList() {
           defaultValue={UsersLikesData[toilet.key] === true ? 1 : 0}
           max={1}
           onChange={(event, newValue) => {
-            writeLikeData(toilet.key, newValue);
+            handleLikeButtonClick(toilet.key, newValue);
           }}
           icon={<FavoriteIcon fontSize="inherit" />}
-          emptyIcon={<FavoriteBorderIcon fontSize="inherit" />}
+          emptyIcon={
+            <FavoriteBorderIcon fontSize="inherit" color="secondary" />
+          }
         />{" "}
-        <span>{toilet.val.Address}</span>{" "}
+        {/* <span>{toilet.val.Address}</span>{" "} */}
+        <Button variant="contained">{toilet.val.Address}</Button>{" "}
         {/* direction button
          */}
         <Fab variant="extended" size="small" color="primary" aria-label="add">
-          <NavigationIcon sx={{ mr: 1 }} />
-          Directions
+          <NavigationIcon sx={{ mr: 0 }} />
+        </Fab>{" "}
+        <Fab
+          variant="extended"
+          size="small"
+          color="primary"
+          aria-label="add"
+          onClick={() => {
+            props.setselectedToilet(toilet.key);
+            navigate("/UploadReview"); // navigate to review list when clicked
+          }}
+        >
+          <ReviewsIcon sx={{ mr: 0 }} />
         </Fab>
       </li>
     </div>

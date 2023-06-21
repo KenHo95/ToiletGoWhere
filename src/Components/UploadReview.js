@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import { React, useState } from "react";
+import { useParams } from "react-router-dom";
+
 import { realTimeDatabase, storage } from "../firebase";
 import { push, ref as realTimeDatabaseRef, set } from "firebase/database";
 import {
@@ -12,11 +14,12 @@ import Rating from "@mui/material/Rating";
 const DB_APPDATA_KEY = "AppData/";
 const STORAGE_USERUPLOADS_KEY = "user-review-uploads/";
 
-function UploadReview() {
+function UploadReview(props) {
   // initialise initial states and set states
   const [reviewInput, setReviewInput] = useState("");
   const [fileInputFile, setfileInputFile] = useState(null);
   const [ratingInputValue, setRatingInputValue] = useState(3);
+  let { id } = useParams();
 
   // functions
   const writeData = (url) => {
@@ -94,6 +97,7 @@ function UploadReview() {
   return (
     <form onSubmit={handlePostSubmit}>
       {/* message input */}
+      {/* <h3>{props.selectedToilet}</h3> */}
       <h3>Review</h3>
       <Rating
         name="simple-controlled"
