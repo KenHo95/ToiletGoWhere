@@ -4,6 +4,7 @@ import { Routes, Route, Link } from "react-router-dom";
 
 import UploadReview from "./Components/UploadReview";
 import ToiletList from "./Components/ToiletList";
+import ReviewList from "./Components/ReviewList";
 
 function App() {
   // initialise initial states and set states
@@ -13,9 +14,10 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>ToiletGoWhere</h1>
-
-        <Link to="/">Home</Link>
+        <ReviewList selectedToilet={0} />
+        {/* <Link to="/">Home</Link>
         <Link to="/UploadReview">UploadReview</Link>
+        <Link to="/ReviewList">ReviewList</Link>
 
         <Routes>
           <Route
@@ -26,8 +28,11 @@ function App() {
             path="/UploadReview"
             element={<UploadReview selectedToilet={selectedToilet} />}
           />
-          {/* <Route path="*" element={<NoPage />} /> */}
-        </Routes>
+          <Route
+            path="/ReviewList"
+            element={<ReviewList selectedToilet={selectedToilet} />}
+          />
+        </Routes> */}
       </header>
     </div>
   );

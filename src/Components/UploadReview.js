@@ -1,6 +1,4 @@
 import { React, useState } from "react";
-import { useParams } from "react-router-dom";
-
 import { realTimeDatabase, storage } from "../firebase";
 import { push, ref as realTimeDatabaseRef, set } from "firebase/database";
 import {
@@ -19,14 +17,13 @@ function UploadReview(props) {
   const [reviewInput, setReviewInput] = useState("");
   const [fileInputFile, setfileInputFile] = useState(null);
   const [ratingInputValue, setRatingInputValue] = useState(3);
-  let { id } = useParams();
 
   // functions
   const writeData = (url) => {
     // set ref with relevant toilet id
     const PostRef = realTimeDatabaseRef(
       realTimeDatabase,
-      DB_APPDATA_KEY + "Reviews/ToiletId1/" // Todo: change to receive toiletid prop
+      DB_APPDATA_KEY + `Reviews/${props.selectedToilet}/`
     );
     const newPostRef = push(PostRef);
 
@@ -97,7 +94,7 @@ function UploadReview(props) {
   return (
     <form onSubmit={handlePostSubmit}>
       {/* message input */}
-      {/* <h3>{props.selectedToilet}</h3> */}
+      <h3>{props.selectedToilet}</h3>
       <h3>Review</h3>
       <Rating
         name="simple-controlled"

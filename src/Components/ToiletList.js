@@ -77,7 +77,7 @@ function ToiletList(props) {
     return () => {};
   }, []);
 
-  console.log(UsersLikesData);
+  // console.log(UsersLikesData);
 
   const handleLikeButtonClick = (toiletID, isLiked) => {
     // console.log("writelike");
