@@ -5,12 +5,7 @@ import { realTimeDatabase } from "../firebase";
 import {
   onChildAdded,
   ref as realTimeDatabaseRef,
-  push,
-  set,
   update,
-  get,
-  child,
-  onChildRemoved,
   remove,
 } from "firebase/database";
 
@@ -41,7 +36,6 @@ const DB_APPDATA_KEY = "AppData";
 //
 function ToiletList() {
   const [toiletsData, setToiletsData] = useState([]);
-  const [likeInput, setlikeInput] = useState(0);
   const [UsersLikesData, setUsersLikesData] = useState({});
 
   // set relevant refs
@@ -70,15 +64,6 @@ function ToiletList() {
         [data.key]: data.val(),
       }));
     });
-
-    // onChildRemoved(UsersLikesRef, (data) => {
-    //   console.log("child removed");
-    //   console.log(data.key);
-
-    //   // const toiletid = data.key;
-
-    //   delete UsersLikesData[0];
-    // });
 
     return () => {};
   }, []);
@@ -116,7 +101,6 @@ function ToiletList() {
           defaultValue={UsersLikesData[toilet.key] === true ? 1 : 0}
           max={1}
           onChange={(event, newValue) => {
-            setlikeInput(newValue);
             writeLikeData(toilet.key, newValue);
           }}
           icon={<FavoriteIcon fontSize="inherit" />}
