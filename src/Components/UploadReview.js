@@ -1,6 +1,11 @@
 import { React, useState } from "react";
 import { realTimeDatabase, storage } from "../firebase";
-import { push, ref as realTimeDatabaseRef, set } from "firebase/database";
+import {
+  push,
+  ref as realTimeDatabaseRef,
+  set,
+  update,
+} from "firebase/database";
 import {
   getDownloadURL,
   ref as storageRef,
@@ -25,6 +30,7 @@ function UploadReview(props) {
       realTimeDatabase,
       DB_APPDATA_KEY + `Reviews/${props.selectedToilet}/`
     );
+
     const newPostRef = push(PostRef);
 
     // upload data to firebase at ref
@@ -36,7 +42,7 @@ function UploadReview(props) {
       uploadURL: url,
     });
 
-    set(
+    update(
       realTimeDatabaseRef(
         realTimeDatabase,
         DB_APPDATA_KEY + `Ratings/${props.selectedToilet}/`

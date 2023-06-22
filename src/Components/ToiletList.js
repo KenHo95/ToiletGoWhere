@@ -1,5 +1,3 @@
-//TODO: Update code of that heart stays like after refresh
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -27,6 +25,8 @@ import NavigationIcon from "@mui/icons-material/Navigation";
 // styling for review button
 import ReviewsIcon from "@mui/icons-material/Reviews";
 
+// styling for average ratings
+
 // styling - color of like hearts
 const StyledRating = styled(Rating)({
   "& .MuiRating-iconFilled": {
@@ -44,11 +44,12 @@ const DB_APPDATA_KEY = "AppData";
 //
 function ToiletList(props) {
   const [toiletsData, setToiletsData] = useState([]);
-  const [UsersLikesData, setUsersLikesData] = useState({});
+  const [usersLikesData, setUsersLikesData] = useState({});
+  const [toiletRatingsData, setToiletRatingsData] = useState([]);
   const navigate = useNavigate();
 
   // set relevant refs
-  const toiletsDataRef = realTimeDatabaseRef(
+  const ToiletsDataRef = realTimeDatabaseRef(
     realTimeDatabase,
     DB_TOILETDATA_KEY
   );
@@ -58,8 +59,13 @@ function ToiletList(props) {
     DB_APPDATA_KEY + "/LikedToilets/UserID3/" // Todo: change to receive UserID prop
   );
 
+  const ToiletRatingsRef = realTimeDatabaseRef(
+    realTimeDatabase,
+    DB_APPDATA_KEY + "/Ratings/" // Todo: change to receive UserID prop
+  );
+
   useEffect(() => {
-    onChildAdded(toiletsDataRef, (data) => {
+    onChildAdded(ToiletsDataRef, (data) => {
       console.log("toiletsData added");
 
       setToiletsData((prev) => [...prev, { key: data.key, val: data.val() }]);
@@ -72,6 +78,12 @@ function ToiletList(props) {
         ...prev,
         [data.key]: data.val(),
       }));
+    });
+
+    onChildAdded(ToiletRatingsRef, (data) => {
+      console.log("ToiletRatings added");
+
+      setToiletRatingsData((prev) => [...prev, data.val()]);
     });
 
     return () => {};
@@ -98,8 +110,19 @@ function ToiletList(props) {
       );
 
       // update user like data locally
-      delete UsersLikesData[toiletID];
+      delete usersLikesData[toiletID];
     }
+  };
+
+  const getAvgRatings = (toiletId) => {
+    let sumRatings = 0,
+      count = 0;
+
+    for (var key in toiletRatingsData[toiletId]) {
+      sumRatings += toiletRatingsData[toiletId][key];
+      count++;
+    }
+    return sumRatings / count;
   };
 
   // create toilet list from toilet data
@@ -109,7 +132,7 @@ function ToiletList(props) {
         {/* like button */}
         <StyledRating
           name="customized-color"
-          defaultValue={UsersLikesData[toilet.key] === true ? 1 : 0}
+          defaultValue={usersLikesData[toilet.key] === true ? 1 : 0}
           max={1}
           onChange={(event, newValue) => {
             handleLikeButtonClick(toilet.key, newValue);
@@ -120,7 +143,16 @@ function ToiletList(props) {
           }
         />{" "}
         {/* <span>{toilet.val.Address}</span>{" "} */}
-        <Button variant="contained">{toilet.val.Address}</Button>{" "}
+        <Button variant="contained">
+          {toilet.val.Address + " "}
+          {!isNaN(getAvgRatings(toilet.key)) && (
+            <Rating
+              name="read-only"
+              value={getAvgRatings(toilet.key)}
+              readOnly
+            />
+          )}
+        </Button>{" "}
         {/* direction button
          */}
         <Fab variant="extended" size="small" color="primary" aria-label="add">
