@@ -36,6 +36,16 @@ function UploadReview(props) {
       uploadURL: url,
     });
 
+    set(
+      realTimeDatabaseRef(
+        realTimeDatabase,
+        DB_APPDATA_KEY + `Ratings/${props.selectedToilet}/`
+      ),
+      {
+        [newPostRef.key]: ratingInputValue,
+      }
+    );
+
     // reset states
     setReviewInput("");
     setfileInputFile(null);
@@ -94,7 +104,8 @@ function UploadReview(props) {
   return (
     <form onSubmit={handlePostSubmit}>
       {/* message input */}
-      <h3>{props.selectedToilet}</h3>
+      {/* <h3>{props.selectedToilet}</h3> */}
+      <br />
       <h3>Review</h3>
       <Rating
         name="simple-controlled"

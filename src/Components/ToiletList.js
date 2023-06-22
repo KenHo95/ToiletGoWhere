@@ -133,7 +133,7 @@ function ToiletList(props) {
           aria-label="add"
           onClick={() => {
             props.setselectedToilet(toilet.key);
-            navigate("/UploadReview"); // navigate to review list when clicked
+            navigate("/ReviewList"); // navigate to review list when clicked
           }}
         >
           <ReviewsIcon sx={{ mr: 0 }} />

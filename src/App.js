@@ -14,25 +14,22 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>ToiletGoWhere</h1>
-        <ReviewList selectedToilet={0} />
+        {/* <ReviewList selectedToilet={0} /> */}
         {/* <Link to="/">Home</Link>
         <Link to="/UploadReview">UploadReview</Link>
-        <Link to="/ReviewList">ReviewList</Link>
+        <Link to="/ReviewList">ReviewList</Link> */}
 
         <Routes>
           <Route
             path="/"
             element={<ToiletList setselectedToilet={setselectedToilet} />}
           />
-          <Route
-            path="/UploadReview"
-            element={<UploadReview selectedToilet={selectedToilet} />}
-          />
+          <Route path="/UploadReview" element={<UploadReview />} />
           <Route
             path="/ReviewList"
             element={<ReviewList selectedToilet={selectedToilet} />}
           />
-        </Routes> */}
+        </Routes>
       </header>
     </div>
   );

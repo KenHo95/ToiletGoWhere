@@ -1,9 +1,11 @@
 import { React, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { realTimeDatabase } from "../firebase";
 import { ref as realTimeDatabaseRef, onChildAdded } from "firebase/database";
 // styling for toilet button
 import Button from "@mui/material/Button";
 import Rating from "@mui/material/Rating";
+import UploadReview from "./UploadReview";
 
 const DB_TOILET_REVIEWLIST_KEY = "AppData/Reviews";
 // const STORAGE_USERUPLOADS_KEY = "user-review-uploads/";
@@ -11,6 +13,7 @@ const DB_TOILET_REVIEWLIST_KEY = "AppData/Reviews";
 function ReviewList(props) {
   // initialise initial states and set states
   const [toiletReviewsData, setToiletReviewsData] = useState([]);
+  const navigate = useNavigate();
 
   const toiletReviewsRef = realTimeDatabaseRef(
     realTimeDatabase,
@@ -34,7 +37,6 @@ function ReviewList(props) {
     <div>
       <li className={"toilet-list"} key={review.key}>
         {/* like button */}
-        {/* <span>{toilet.val.Address}</span>{" "} */}
         <p>Date: {review.val.date}</p>
         <p>User: {review.val.email}</p>
         <Rating name="read-only" value={review.val.rating} readOnly />
@@ -52,6 +54,15 @@ function ReviewList(props) {
 
   return (
     <div>
+      <Button
+        variant="contained"
+        onClick={() => {
+          navigate("/"); // navigate to review list when clicked
+        }}
+      >
+        Back
+      </Button>
+      <UploadReview selectedToilet={props.selectedToilet} />
       {console.log(toiletReviewsData)} <h1>Reviews</h1>
       {reviewListItems}
     </div>
