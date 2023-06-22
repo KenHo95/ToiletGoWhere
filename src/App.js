@@ -5,6 +5,7 @@ import { Routes, Route, Link } from "react-router-dom";
 import UploadReview from "./Components/UploadReview";
 import ToiletList from "./Components/ToiletList";
 import ReviewList from "./Components/ReviewList";
+import LikedToiletList from "./Components/LikedToiletList";
 
 function App() {
   // initialise initial states and set states
@@ -14,10 +15,12 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>ToiletGoWhere</h1>
+        {/* <LikedToiletList /> */}
         {/* <ReviewList selectedToilet={0} /> */}
-        {/* <Link to="/">Home</Link>
-        <Link to="/UploadReview">UploadReview</Link>
-        <Link to="/ReviewList">ReviewList</Link> */}
+        <Link to="/">Home</Link>
+        {/* <Link to="/UploadReview">UploadReview</Link> */}
+        <Link to="/LikedToiletList">Liked</Link>
+        <Link to="/SearchToilets">Search</Link>
 
         <Routes>
           <Route
@@ -29,6 +32,7 @@ function App() {
             path="/ReviewList"
             element={<ReviewList selectedToilet={selectedToilet} />}
           />
+          <Route path="/:id" element={<LikedToiletList />} />
         </Routes>
       </header>
     </div>

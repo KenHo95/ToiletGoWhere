@@ -128,54 +128,60 @@ function ToiletList(props) {
   // create toilet list from toilet data
   let toiletsListItems = toiletsData.map((toilet) => (
     <div>
-      <li className={"toilet-list"} key={toilet.key}>
-        {/* like button */}
-        <StyledRating
-          name="customized-color"
-          defaultValue={usersLikesData[toilet.key] === true ? 1 : 0}
-          max={1}
-          onChange={(event, newValue) => {
-            handleLikeButtonClick(toilet.key, newValue);
-          }}
-          icon={<FavoriteIcon fontSize="inherit" />}
-          emptyIcon={
-            <FavoriteBorderIcon fontSize="inherit" color="secondary" />
-          }
-        />{" "}
-        {/* <span>{toilet.val.Address}</span>{" "} */}
-        <Button variant="contained">
-          {toilet.val.Address + " "}
-          {!isNaN(getAvgRatings(toilet.key)) && (
-            <Rating
-              name="read-only"
-              value={getAvgRatings(toilet.key)}
-              readOnly
-            />
-          )}
-        </Button>{" "}
-        {/* direction button
-         */}
-        <Fab variant="extended" size="small" color="primary" aria-label="add">
-          <NavigationIcon sx={{ mr: 0 }} />
-        </Fab>{" "}
-        <Fab
-          variant="extended"
-          size="small"
-          color="primary"
-          aria-label="add"
-          onClick={() => {
-            props.setselectedToilet(toilet.key);
-            navigate("/ReviewList"); // navigate to review list when clicked
-          }}
-        >
-          <ReviewsIcon sx={{ mr: 0 }} />
-        </Fab>
-      </li>
+      {/* Switch between main and liked toilet list */}
+      {(props.urlId === "LikedToiletList"
+        ? props.likedToiletData[toilet.key]
+        : true) && (
+        <li className={"toilet-list"} key={toilet.key}>
+          {/* like button */}
+          <StyledRating
+            name="customized-color"
+            defaultValue={usersLikesData[toilet.key] === true ? 1 : 0}
+            max={1}
+            onChange={(event, newValue) => {
+              handleLikeButtonClick(toilet.key, newValue);
+            }}
+            icon={<FavoriteIcon fontSize="inherit" />}
+            emptyIcon={
+              <FavoriteBorderIcon fontSize="inherit" color="secondary" />
+            }
+          />{" "}
+          {/* <span>{toilet.val.Address}</span>{" "} */}
+          <Button variant="contained">
+            {toilet.val.Address + " "}
+            {!isNaN(getAvgRatings(toilet.key)) && (
+              <Rating
+                name="read-only"
+                value={getAvgRatings(toilet.key)}
+                readOnly
+              />
+            )}
+          </Button>{" "}
+          {/* direction button
+           */}
+          <Fab variant="extended" size="small" color="primary" aria-label="add">
+            <NavigationIcon sx={{ mr: 0 }} />
+          </Fab>{" "}
+          <Fab
+            variant="extended"
+            size="small"
+            color="primary"
+            aria-label="add"
+            onClick={() => {
+              props.setselectedToilet(toilet.key);
+              navigate("/ReviewList"); // navigate to review list when clicked
+            }}
+          >
+            <ReviewsIcon sx={{ mr: 0 }} />
+          </Fab>
+        </li>
+      )}
     </div>
   ));
 
   return (
     // display toilet list
+
     <div>
       <ol>{toiletsListItems}</ol>
       {/* {console.log(UsersLikesData)}; */}
