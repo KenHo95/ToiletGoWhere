@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import { React, useState } from "react";
 import { realTimeDatabase, storage } from "../firebase";
-import { push, ref as realTimeDatabaseRef, set } from "firebase/database";
+import {
+  push,
+  ref as realTimeDatabaseRef,
+  set,
+  update,
+} from "firebase/database";
 import {
   getDownloadURL,
   ref as storageRef,
@@ -9,10 +14,10 @@ import {
 
 import Rating from "@mui/material/Rating";
 
-const DB_APPDATA_KEY = "AppData/Reviews/ToiletId1/"; // Todo: change to receive toiletid prop
+const DB_APPDATA_KEY = "AppData/";
 const STORAGE_USERUPLOADS_KEY = "user-review-uploads/";
 
-function UploadReview() {
+function UploadReview(props) {
   // initialise initial states and set states
   const [reviewInput, setReviewInput] = useState("");
   const [fileInputFile, setfileInputFile] = useState(null);
@@ -20,9 +25,15 @@ function UploadReview() {
 
   // functions
   const writeData = (url) => {
-    const PostRef = realTimeDatabaseRef(realTimeDatabase, DB_APPDATA_KEY);
+    // set ref with relevant toilet id
+    const PostRef = realTimeDatabaseRef(
+      realTimeDatabase,
+      DB_APPDATA_KEY + `Reviews/${props.selectedToilet}/`
+    );
+
     const newPostRef = push(PostRef);
 
+    // upload data to firebase at ref
     set(newPostRef, {
       date: new Date().toLocaleString(),
       email: "testing123@gmail.com", // Todo: change to receive email prop from firebase or google auth
@@ -30,6 +41,16 @@ function UploadReview() {
       rating: ratingInputValue,
       uploadURL: url,
     });
+
+    update(
+      realTimeDatabaseRef(
+        realTimeDatabase,
+        DB_APPDATA_KEY + `Ratings/${props.selectedToilet}/`
+      ),
+      {
+        [newPostRef.key]: ratingInputValue,
+      }
+    );
 
     // reset states
     setReviewInput("");
@@ -89,6 +110,8 @@ function UploadReview() {
   return (
     <form onSubmit={handlePostSubmit}>
       {/* message input */}
+      {/* <h3>{props.selectedToilet}</h3> */}
+      <br />
       <h3>Review</h3>
       <Rating
         name="simple-controlled"
