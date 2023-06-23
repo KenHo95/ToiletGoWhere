@@ -1,10 +1,9 @@
 import "./App.css";
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 
 import UploadReview from "./Components/UploadReview";
 import Map from "./Components/Map";
-import { useState, useEffect } from "react";
 import AuthForm from "./Components/AuthForm";
 import { auth } from "./firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
@@ -17,7 +16,7 @@ import LikedToiletList from "./Components/LikedToiletList";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState({ email: "" });
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -27,6 +26,7 @@ function App() {
         setUser(user);
       }
     });
+    return;
   }, []);
 
   // initialise initial states and set states
@@ -48,16 +48,19 @@ function App() {
               onClick={(e) => {
                 setIsLoggedIn(false);
                 signOut(auth);
-                setUser({});
+                setUser({ email: "" });
               }}
             >
               Logout!
             </button>
           ) : null}
+          <br />
+          <br />
           <Map />
 
-          {isLoggedIn ? <UploadReview /> : <AuthForm />}
+          {isLoggedIn ? null : <AuthForm />}
         </div>
+        <br />
         {/* <LikedToiletList /> */}
         {/* <ReviewList selectedToilet={0} /> */}
         <Link to="/">Home</Link>
@@ -68,14 +71,25 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<ToiletList setselectedToilet={setselectedToilet} />}
+            element={
+              <ToiletList
+                setselectedToilet={setselectedToilet}
+                userEmail={user.email}
+              />
+            }
           />
-          <Route path="/UploadReview" element={<UploadReview />} />
+          <Route
+            path="/UploadReview"
+            element={<UploadReview userEmail={user.email} />}
+          />
           <Route
             path="/ReviewList"
             element={<ReviewList selectedToilet={selectedToilet} />}
           />
-          <Route path="/:id" element={<LikedToiletList />} />
+          <Route
+            path="/:id"
+            element={<LikedToiletList userEmail={user.email} />}
+          />
         </Routes>
       </header>
     </div>

@@ -10,7 +10,7 @@ import toiletIcon from "../toileticon.png";
 
 const Map = () => {
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: process.env.REACT_APP_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
   const [mapRef, setMapRef] = useState();
   const [isOpen, setIsOpen] = useState(false);

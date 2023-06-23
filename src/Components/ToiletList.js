@@ -56,38 +56,41 @@ function ToiletList(props) {
 
   const UsersLikesRef = realTimeDatabaseRef(
     realTimeDatabase,
-    DB_APPDATA_KEY + "/LikedToilets/UserID3/" // Todo: change to receive UserID prop
+    DB_APPDATA_KEY + `/LikedToilets/${props.userEmail.split(".")[0]}/`
   );
 
   const ToiletRatingsRef = realTimeDatabaseRef(
     realTimeDatabase,
-    DB_APPDATA_KEY + "/Ratings/" // Todo: change to receive UserID prop
+    DB_APPDATA_KEY + "/Ratings/"
   );
 
   useEffect(() => {
-    onChildAdded(ToiletsDataRef, (data) => {
-      console.log("toiletsData added");
+    props.userEmail && // ask khairul
+      onChildAdded(ToiletsDataRef, (data) => {
+        console.log("toiletsData added");
 
-      setToiletsData((prev) => [...prev, { key: data.key, val: data.val() }]);
-    });
+        setToiletsData((prev) => [...prev, { key: data.key, val: data.val() }]);
+      });
 
-    onChildAdded(UsersLikesRef, (data) => {
-      console.log("UsersLike added");
+    props.userEmail &&
+      onChildAdded(UsersLikesRef, (data) => {
+        console.log("UsersLike added");
 
-      setUsersLikesData((prev) => ({
-        ...prev,
-        [data.key]: data.val(),
-      }));
-    });
+        setUsersLikesData((prev) => ({
+          ...prev,
+          [data.key]: data.val(),
+        }));
+      });
 
-    onChildAdded(ToiletRatingsRef, (data) => {
-      console.log("ToiletRatings added");
+    props.userEmail &&
+      onChildAdded(ToiletRatingsRef, (data) => {
+        console.log("ToiletRatings added");
 
-      setToiletRatingsData((prev) => [...prev, data.val()]);
-    });
+        setToiletRatingsData((prev) => [...prev, data.val()]);
+      });
 
     return () => {};
-  }, []);
+  }, [props.userEmail]);
 
   // console.log(UsersLikesData);
 
@@ -105,7 +108,8 @@ function ToiletList(props) {
       remove(
         realTimeDatabaseRef(
           realTimeDatabase,
-          DB_APPDATA_KEY + `/LikedToilets/UserID3/${toiletID}` // Todo: change to receive UserID prop
+          DB_APPDATA_KEY +
+            `/LikedToilets/${props.userEmail.split(".")[0]}/${toiletID}`
         )
       );
 
@@ -184,7 +188,10 @@ function ToiletList(props) {
 
     <div>
       <ol>{toiletsListItems}</ol>
-      {/* {console.log(UsersLikesData)}; */}
+      {/* {console.log(usersLikesData)} */}
+      <br />
+      <br />
+      <br />
     </div>
   );
 }

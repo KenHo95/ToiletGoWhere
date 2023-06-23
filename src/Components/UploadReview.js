@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { realTimeDatabase, storage } from "../firebase";
 import {
   push,
@@ -11,6 +11,8 @@ import {
   ref as storageRef,
   uploadBytesResumable,
 } from "firebase/storage";
+import { auth } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 import Rating from "@mui/material/Rating";
 
@@ -22,6 +24,18 @@ function UploadReview(props) {
   const [reviewInput, setReviewInput] = useState("");
   const [fileInputFile, setfileInputFile] = useState(null);
   const [ratingInputValue, setRatingInputValue] = useState(3);
+  const [user, setUser] = useState({ email: "" });
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      // ask khairul: must we initialise this everywhere we need it
+      console.log(user);
+      if (user) {
+        setUser(user);
+      }
+    });
+    return;
+  }, []);
 
   // functions
   const writeData = (url) => {
@@ -36,7 +50,7 @@ function UploadReview(props) {
     // upload data to firebase at ref
     set(newPostRef, {
       date: new Date().toLocaleString(),
-      email: "testing123@gmail.com", // Todo: change to receive email prop from firebase or google auth
+      email: user.email,
       review: reviewInput,
       rating: ratingInputValue,
       uploadURL: url,
@@ -70,7 +84,9 @@ function UploadReview(props) {
 
     const fullStorageRef = storageRef(
       storage,
-      STORAGE_USERUPLOADS_KEY + "testing123@gmail.com/" + fileInputFile.name
+      STORAGE_USERUPLOADS_KEY +
+        `${user.email.split(".")[0]}/` +
+        fileInputFile.name
     );
 
     const uploadTask = uploadBytesResumable(fullStorageRef, fileInputFile);
@@ -109,6 +125,7 @@ function UploadReview(props) {
   // display
   return (
     <form onSubmit={handlePostSubmit}>
+      {console.log(props.userEmail)}
       {/* message input */}
       {/* <h3>{props.selectedToilet}</h3> */}
       <br />

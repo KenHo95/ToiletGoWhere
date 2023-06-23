@@ -12,7 +12,7 @@ function LikedToiletList(props) {
 
   const LikedToiletRef = realTimeDatabaseRef(
     realTimeDatabase,
-    DB_APPDATA_KEY + `/LikedToilets/UserID3/` // Todo: change to receive UserID prop
+    DB_APPDATA_KEY + `/LikedToilets/${props.userEmail.split(".")[0]}/`
   );
 
   useEffect(() => {
@@ -30,7 +30,11 @@ function LikedToiletList(props) {
 
   return (
     <div>
-      <ToiletList likedToiletData={likedToiletData} urlId={id} />
+      <ToiletList
+        likedToiletData={likedToiletData}
+        urlId={id}
+        userEmail={props.userEmail}
+      />
     </div>
   );
 }
