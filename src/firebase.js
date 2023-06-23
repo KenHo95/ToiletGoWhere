@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
+import { getDatabase, ref, get } from "firebase/database";
 import { getStorage } from "firebase/storage";
-import { getAuth } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 // App's Firebase project configuration
 const firebaseConfig = {
@@ -22,3 +22,37 @@ const firebaseApp = initializeApp(firebaseConfig);
 export const realTimeDatabase = getDatabase(firebaseApp);
 export const storage = getStorage(firebaseApp);
 export const auth = getAuth(firebaseApp);
+
+// Access Realtime Database reference
+const database = getDatabase();
+const toiletRef = ref(database, "ToiletData");
+const provider = new GoogleAuthProvider();
+export const signInWithGoogle = () => {
+  signInWithPopup(auth, provider)
+    .then((result) => {
+      console.log(result);
+      const name = result.user.displayName;
+      const email = result.user.email;
+      const profilePic = result.user.photoURL;
+
+      localStorage.setItem("name", name);
+      localStorage.setItem("email", email);
+      localStorage.setItem("profilePic", profilePic);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+// Fetch toilet data from Realtime Database
+export const fetchToiletData = async () => {
+  try {
+    const snapshot = await get(toiletRef);
+    console.log(snapshot);
+    const data = snapshot.val();
+    console.log(data);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
