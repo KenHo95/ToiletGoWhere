@@ -1,21 +1,3 @@
-// import "./App.css";
-// import React from "react";
-// import UploadReview from "./Components/UploadReview";
-// import MapContainer from "./Components/map";
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <h1>ToiletGoWhere</h1>
-//         <UploadReview />
-//         <MapContainer />
-//       </header>
-//     </div>
-//   );
-// }
-
-// export default App;
 import "./App.css";
 import React from "react";
 import UploadReview from "./Components/UploadReview";
@@ -24,6 +6,9 @@ import { useState, useEffect } from "react";
 import AuthForm from "./Components/AuthForm";
 import { auth } from "./firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+// import CssBaseline from "@mui/material/CssBaseline";
+
+// import Header from "./Components/Header";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -40,6 +25,10 @@ function App() {
   }, []);
 
   return (
+    // <>
+    //   <CssBaseline />
+    //   <Header />
+
     <div className="App">
       <header className="App-header">
         <h1>ToiletGoWhere</h1>
@@ -64,6 +53,7 @@ function App() {
         {isLoggedIn ? <UploadReview /> : <AuthForm />}
       </header>
     </div>
+    // </>
   );
 }
 
