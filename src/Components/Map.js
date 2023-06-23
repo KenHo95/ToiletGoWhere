@@ -7,7 +7,6 @@ import {
 import "../App.css";
 import { useState } from "react";
 import toiletIcon from "../toileticon.png";
-// require("dotenv").config();
 
 const Map = () => {
   const { isLoaded } = useLoadScript({
