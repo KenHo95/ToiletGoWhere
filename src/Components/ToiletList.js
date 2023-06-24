@@ -140,7 +140,7 @@ function ToiletList(props) {
           {/* like button */}
           <StyledRating
             name="customized-color"
-            defaultValue={usersLikesData[toilet.key] === true ? 1 : 0}
+            defaultValue={usersLikesData[toilet.key] ? 1 : 0}
             max={1}
             onChange={(event, newValue) => {
               handleLikeButtonClick(toilet.key, newValue);

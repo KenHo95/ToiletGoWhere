@@ -5,8 +5,13 @@ import {
   InfoWindow,
 } from "@react-google-maps/api";
 import "../App.css";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { realTimeDatabase } from "../firebase";
+
+import { onChildAdded, ref as realTimeDatabaseRef } from "firebase/database";
+
 import toiletIcon from "../toileticon.png";
+const DB_TOILETDATA_KEY = "ToiletData";
 
 const Map = () => {
   const { isLoaded } = useLoadScript({
@@ -15,6 +20,22 @@ const Map = () => {
   const [mapRef, setMapRef] = useState();
   const [isOpen, setIsOpen] = useState(false);
   const [infoWindowData, setInfoWindowData] = useState();
+  const [toiletsData, setToiletsData] = useState([]);
+
+  const ToiletsDataRef = realTimeDatabaseRef(
+    realTimeDatabase,
+    DB_TOILETDATA_KEY
+  );
+
+  useEffect(() => {
+    onChildAdded(ToiletsDataRef, (data) => {
+      console.log("toiletsData added");
+
+      setToiletsData((prev) => [...prev, { key: data.key, val: data.val() }]);
+    });
+
+    return () => {};
+  }, []);
 
   const markers = [
     { address: "Bishan Bus Interchange", lat: 1.350139, lng: 103.849757 },
@@ -35,6 +56,13 @@ const Map = () => {
     setIsOpen(true);
   };
 
+  let Items = toiletsData.map((toilet) => ({
+    key: toilet.key,
+    lat: toilet.val.Latitude,
+    lng: toilet.val.Longgitude,
+    address: toilet.val.Address,
+  }));
+
   return (
     <div className="App">
       {!isLoaded ? (
@@ -45,7 +73,7 @@ const Map = () => {
           onLoad={onMapLoad}
           onClick={() => setIsOpen(false)}
         >
-          {markers.map(({ address, lat, lng }, ind) => (
+          {Items.map(({ address, lat, lng }, ind) => (
             <MarkerF
               key={ind}
               position={{ lat, lng }}

@@ -47,9 +47,8 @@ export default function AuthForm() {
       <button onClick={signUp}>SignUp</button> <br />
       <button onClick={signIn}>SignIn</button> <br />
       <button
-        button
         type="button"
-        class="login-with-google-btn"
+        className="login-with-google-btn"
         onClick={signInWithGoogle}
       >
         Sign In With Google
