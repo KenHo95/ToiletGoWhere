@@ -7,7 +7,6 @@ import {
 import "../App.css";
 import React, { useState, useEffect } from "react";
 import { realTimeDatabase } from "../firebase";
-
 import { onChildAdded, ref as realTimeDatabaseRef } from "firebase/database";
 
 import toiletIcon from "../toileticon.png";
@@ -58,6 +57,7 @@ const Map = (props) => {
   };
 
   let Items = toiletsData.map((toilet) => ({
+    key: toilet.key,
     lat: toilet.val.Latitude,
     lng: toilet.val.Longgitude,
     address: toilet.val.Address,
@@ -73,19 +73,19 @@ const Map = (props) => {
           onLoad={onMapLoad}
           onClick={() => setIsOpen(false)}
         >
-          {Items.map(({ address, lat, lng }, ind) => (
+          {Items.map(({ address, lat, lng, key }) => (
             <MarkerF
-              key={ind}
+              key={key}
               position={{ lat, lng }}
               icon={{
                 url: toiletIcon,
                 scaledSize: new window.google.maps.Size(50, 50),
               }}
               onClick={() => {
-                handleMarkerClick(ind, lat, lng, address);
+                handleMarkerClick(key, lat, lng, address);
               }}
             >
-              {isOpen && infoWindowData?.id === ind && (
+              {isOpen && infoWindowData?.id === key && (
                 <InfoWindow
                   onCloseClick={() => {
                     setIsOpen(false);
@@ -98,16 +98,12 @@ const Map = (props) => {
           ))}
         </GoogleMap>
       )}
-
       <ToiletList
         selectedToilet={props.selectedToilet}
         setselectedToilet={props.setselectedToilet}
         userEmail={props.userEmail}
         handleMarkerClick={handleMarkerClick}
-        setIsOpen={setIsOpen}
       />
-      {/* {console.log(toiletsData)}
-      {console.log(Items)} */}
     </div>
   );
 };

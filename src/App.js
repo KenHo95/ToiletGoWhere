@@ -10,7 +10,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 // import CssBaseline from "@mui/material/CssBaseline";
 
 // import Header from "./Components/Header";
-import ToiletList from "./Components/ToiletList";
+// import ToiletList from "./Components/ToiletList";
 import ReviewList from "./Components/ReviewList";
 import LikedToiletList from "./Components/LikedToiletList";
 
@@ -20,7 +20,7 @@ function App() {
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      console.log(user);
+      // console.log(user);
       if (user) {
         setIsLoggedIn(true);
         setUser(user);

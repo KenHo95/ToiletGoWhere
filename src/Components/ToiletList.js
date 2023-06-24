@@ -161,7 +161,6 @@ function ToiletList(props) {
                 toilet.val.Longgitude,
                 toilet.val.Address
               );
-              props.setIsOpen(true);
             }}
           >
             {toilet.val.Address + " "}
