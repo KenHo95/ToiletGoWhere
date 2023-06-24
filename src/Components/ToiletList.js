@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Map from "./Map";
 
 import { realTimeDatabase } from "../firebase";
 import {
@@ -151,7 +152,18 @@ function ToiletList(props) {
             }
           />{" "}
           {/* <span>{toilet.val.Address}</span>{" "} */}
-          <Button variant="contained">
+          <Button
+            variant="contained"
+            onClick={() => {
+              props.handleMarkerClick(
+                toilet.key,
+                toilet.val.Latitude,
+                toilet.val.Longgitude,
+                toilet.val.Address
+              );
+              props.setIsOpen(true);
+            }}
+          >
             {toilet.val.Address + " "}
             {!isNaN(getAvgRatings(toilet.key)) && (
               <Rating

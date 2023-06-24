@@ -11,9 +11,10 @@ import { realTimeDatabase } from "../firebase";
 import { onChildAdded, ref as realTimeDatabaseRef } from "firebase/database";
 
 import toiletIcon from "../toileticon.png";
+import ToiletList from "./ToiletList";
 const DB_TOILETDATA_KEY = "ToiletData";
 
-const Map = () => {
+const Map = (props) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
@@ -57,7 +58,6 @@ const Map = () => {
   };
 
   let Items = toiletsData.map((toilet) => ({
-    key: toilet.key,
     lat: toilet.val.Latitude,
     lng: toilet.val.Longgitude,
     address: toilet.val.Address,
@@ -98,6 +98,16 @@ const Map = () => {
           ))}
         </GoogleMap>
       )}
+
+      <ToiletList
+        selectedToilet={props.selectedToilet}
+        setselectedToilet={props.setselectedToilet}
+        userEmail={props.userEmail}
+        handleMarkerClick={handleMarkerClick}
+        setIsOpen={setIsOpen}
+      />
+      {/* {console.log(toiletsData)}
+      {console.log(Items)} */}
     </div>
   );
 };

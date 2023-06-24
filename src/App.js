@@ -55,8 +55,6 @@ function App() {
             </button>
           ) : null}
           <br />
-          <br />
-          <Map />
 
           {isLoggedIn ? null : <AuthForm />}
         </div>
@@ -67,12 +65,19 @@ function App() {
         {/* <Link to="/UploadReview">UploadReview</Link> */}
         <Link to="/LikedToiletList">Liked</Link>
         <Link to="/SearchToilets">Search</Link>
+        <br />
 
         <Routes>
           <Route
             path="/"
             element={
-              <ToiletList
+              // <ToiletList
+              //   selectedToilet={selectedToilet}
+              //   setselectedToilet={setselectedToilet}
+              //   userEmail={user.email}
+              // />
+              <Map
+                selectedToilet={selectedToilet}
                 setselectedToilet={setselectedToilet}
                 userEmail={user.email}
               />
