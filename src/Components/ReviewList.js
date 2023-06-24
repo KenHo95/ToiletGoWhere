@@ -7,7 +7,6 @@ import Rating from "@mui/material/Rating";
 import UploadReview from "./UploadReview";
 
 const DB_TOILET_REVIEWLIST_KEY = "AppData/Reviews";
-// const STORAGE_USERUPLOADS_KEY = "user-review-uploads/";
 
 function ReviewList(props) {
   // initialise initial states and set states
@@ -52,8 +51,9 @@ function ReviewList(props) {
 
   return (
     <div>
+      <h1>{props.selectedToiletAddress}</h1>
       <UploadReview selectedToilet={props.selectedToilet} />
-      {console.log(toiletReviewsData)} <h1>Reviews</h1>
+      <h1>Reviews</h1>
       {reviewListItems}
     </div>
   );

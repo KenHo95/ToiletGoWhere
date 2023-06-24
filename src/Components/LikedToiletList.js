@@ -3,12 +3,15 @@ import { useParams } from "react-router-dom";
 import { realTimeDatabase } from "../firebase";
 import { ref as realTimeDatabaseRef, onChildAdded } from "firebase/database";
 import ToiletList from "./ToiletList";
+import { useNavigate } from "react-router-dom";
+import Button from "@mui/material/Button";
 
 const DB_APPDATA_KEY = "AppData";
 
 function LikedToiletList(props) {
   const [likedToiletData, setLikedToiletData] = useState({});
   let { id } = useParams();
+  const navigate = useNavigate();
 
   const LikedToiletRef = realTimeDatabaseRef(
     realTimeDatabase,
@@ -30,8 +33,11 @@ function LikedToiletList(props) {
 
   return (
     <div>
+      <Button onClick={() => navigate("/")}> back </Button>
       <ToiletList
+        toiletsData={props.toiletsData}
         likedToiletData={likedToiletData}
+        usersLikesData={props.usersLikesData}
         urlId={id}
         userEmail={props.userEmail}
       />

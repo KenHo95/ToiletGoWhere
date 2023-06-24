@@ -5,13 +5,10 @@ import {
   InfoWindow,
 } from "@react-google-maps/api";
 import "../App.css";
-import React, { useState, useEffect } from "react";
-import { realTimeDatabase } from "../firebase";
-import { onChildAdded, ref as realTimeDatabaseRef } from "firebase/database";
+import React, { useState } from "react";
 
 import toiletIcon from "../toileticon.png";
 import ToiletList from "./ToiletList";
-const DB_TOILETDATA_KEY = "ToiletData";
 
 const Map = (props) => {
   const { isLoaded } = useLoadScript({
@@ -20,22 +17,6 @@ const Map = (props) => {
   const [mapRef, setMapRef] = useState();
   const [isOpen, setIsOpen] = useState(false);
   const [infoWindowData, setInfoWindowData] = useState();
-  const [toiletsData, setToiletsData] = useState([]);
-
-  const ToiletsDataRef = realTimeDatabaseRef(
-    realTimeDatabase,
-    DB_TOILETDATA_KEY
-  );
-
-  useEffect(() => {
-    onChildAdded(ToiletsDataRef, (data) => {
-      console.log("toiletsData added");
-
-      setToiletsData((prev) => [...prev, { key: data.key, val: data.val() }]);
-    });
-
-    return () => {};
-  }, []);
 
   const markers = [
     { address: "Bishan Bus Interchange", lat: 1.350139, lng: 103.849757 },
@@ -56,13 +37,6 @@ const Map = (props) => {
     setIsOpen(true);
   };
 
-  let Items = toiletsData.map((toilet) => ({
-    key: toilet.key,
-    lat: toilet.val.Latitude,
-    lng: toilet.val.Longgitude,
-    address: toilet.val.Address,
-  }));
-
   return (
     <div className="App">
       {!isLoaded ? (
@@ -73,34 +47,38 @@ const Map = (props) => {
           onLoad={onMapLoad}
           onClick={() => setIsOpen(false)}
         >
-          {Items.map(({ address, lat, lng, key }) => (
-            <MarkerF
-              key={key}
-              position={{ lat, lng }}
-              icon={{
-                url: toiletIcon,
-                scaledSize: new window.google.maps.Size(50, 50),
-              }}
-              onClick={() => {
-                handleMarkerClick(key, lat, lng, address);
-              }}
-            >
-              {isOpen && infoWindowData?.id === key && (
-                <InfoWindow
-                  onCloseClick={() => {
-                    setIsOpen(false);
-                  }}
-                >
-                  <h3>{infoWindowData.address}</h3>
-                </InfoWindow>
-              )}
-            </MarkerF>
-          ))}
+          {props.toiletsData.map(
+            ({ Address, Area, Name, Type, lat, lng }, Ind) => (
+              <MarkerF
+                key={Ind}
+                position={{ lat, lng }}
+                icon={{
+                  url: toiletIcon,
+                  scaledSize: new window.google.maps.Size(50, 50),
+                }}
+                onClick={() => {
+                  handleMarkerClick(Ind, lat, lng, Address);
+                }}
+              >
+                {isOpen && infoWindowData?.id === Ind && (
+                  <InfoWindow
+                    onCloseClick={() => {
+                      setIsOpen(false);
+                    }}
+                  >
+                    <h3>{infoWindowData.address}</h3>
+                  </InfoWindow>
+                )}
+              </MarkerF>
+            )
+          )}
         </GoogleMap>
       )}
       <ToiletList
-        selectedToilet={props.selectedToilet}
+        toiletsData={props.toiletsData}
+        usersLikesData={props.usersLikesData}
         setselectedToilet={props.setselectedToilet}
+        setselectedToiletAddress={props.setselectedToiletAddress}
         userEmail={props.userEmail}
         handleMarkerClick={handleMarkerClick}
       />

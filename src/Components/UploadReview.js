@@ -28,8 +28,6 @@ function UploadReview(props) {
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      // ask khairul: must we initialise this everywhere we need it
-      console.log(user);
       if (user) {
         setUser(user);
       }
@@ -61,9 +59,7 @@ function UploadReview(props) {
         realTimeDatabase,
         DB_APPDATA_KEY + `Ratings/${props.selectedToilet}/`
       ),
-      {
-        [newPostRef.key]: ratingInputValue,
-      }
+      { [newPostRef.key]: ratingInputValue }
     );
 
     // reset states
@@ -125,9 +121,7 @@ function UploadReview(props) {
   // display
   return (
     <form onSubmit={handlePostSubmit}>
-      {console.log(props.userEmail)}
       {/* message input */}
-      {/* <h3>{props.selectedToilet}</h3> */}
       <br />
       <h3>Review</h3>
       <Rating

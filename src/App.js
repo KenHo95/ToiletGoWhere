@@ -7,30 +7,59 @@ import Map from "./Components/Map";
 import AuthForm from "./Components/AuthForm";
 import { auth } from "./firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import { realTimeDatabase } from "./firebase";
+import { onChildAdded, ref as realTimeDatabaseRef } from "firebase/database";
 // import CssBaseline from "@mui/material/CssBaseline";
 
 // import Header from "./Components/Header";
-// import ToiletList from "./Components/ToiletList";
 import ReviewList from "./Components/ReviewList";
 import LikedToiletList from "./Components/LikedToiletList";
 
+const DB_TOILETDATA_KEY = "ToiletData";
+const DB_APPDATA_KEY = "AppData";
+
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // initialise initial states and set states
+  const [selectedToilet, setselectedToilet] = useState(null);
+  const [selectedToiletAddress, setselectedToiletAddress] = useState(null);
   const [user, setUser] = useState({ email: "" });
+  const [toiletsData, setToiletsData] = useState([]);
+  const [usersLikesData, setUsersLikesData] = useState({ 0: null });
+
+  const ToiletsDataRef = realTimeDatabaseRef(
+    realTimeDatabase,
+    DB_TOILETDATA_KEY
+  );
+
+  const UsersLikesRef = realTimeDatabaseRef(
+    realTimeDatabase,
+    DB_APPDATA_KEY + `/LikedToilets/${user.email.split(".")[0]}/` // format userEmail to firebase acceptable format
+  );
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      // console.log(user);
       if (user) {
-        setIsLoggedIn(true);
         setUser(user);
       }
     });
-    return;
-  }, []);
+    user.email &&
+      onChildAdded(ToiletsDataRef, (data) => {
+        setToiletsData((prev) => [...prev, data.val()]);
+      });
 
-  // initialise initial states and set states
-  const [selectedToilet, setselectedToilet] = useState(null);
+    user.email &&
+      onChildAdded(UsersLikesRef, (data) => {
+        console.log("UsersLike added");
+
+        setUsersLikesData((prev) => ({
+          // get userlikes data
+          ...prev,
+          [data.key]: data.val(),
+        }));
+      });
+
+    return () => {};
+  }, [user.email]);
 
   return (
     // <>
@@ -41,59 +70,67 @@ function App() {
       <header className="App-header">
         <h1>ToiletGoWhere</h1>
         <div>
-          <div className="upload-review-container"> </div>
-          {isLoggedIn ? <h2>Welcome back {user.email}</h2> : null}
-          {isLoggedIn ? (
-            <button
-              onClick={(e) => {
-                setIsLoggedIn(false);
-                signOut(auth);
-                setUser({ email: "" });
-              }}
-            >
-              Logout!
-            </button>
-          ) : null}
-          <br />
-
-          {isLoggedIn ? null : <AuthForm />}
+          {/* Auth Form */}
+          {user.email !== "" ? (
+            <div>
+              <h2>Welcome back {user.email}!</h2>
+              <button
+                onClick={(e) => {
+                  signOut(auth);
+                  setUser({ email: "" });
+                }}
+              >
+                Logout!
+              </button>
+            </div>
+          ) : (
+            <AuthForm />
+          )}
         </div>
         <br />
-        {/* <LikedToiletList /> */}
-        {/* <ReviewList selectedToilet={0} /> */}
+
+        {/* Links */}
         <Link to="/">Home</Link>
-        {/* <Link to="/UploadReview">UploadReview</Link> */}
         <Link to="/LikedToiletList">Liked</Link>
         <Link to="/SearchToilets">Search</Link>
         <br />
 
         <Routes>
+          {/* Map */}
           <Route
             path="/"
             element={
-              // <ToiletList
-              //   selectedToilet={selectedToilet}
-              //   setselectedToilet={setselectedToilet}
-              //   userEmail={user.email}
-              // />
               <Map
+                toiletsData={toiletsData}
+                usersLikesData={usersLikesData}
                 selectedToilet={selectedToilet}
                 setselectedToilet={setselectedToilet}
+                setselectedToiletAddress={setselectedToiletAddress}
                 userEmail={user.email}
               />
             }
           />
-          <Route
-            path="/UploadReview"
-            element={<UploadReview userEmail={user.email} />}
-          />
+          {/* UploadReview */}
+          <Route path="/UploadReview" element={<UploadReview />} />
           <Route
             path="/ReviewList"
-            element={<ReviewList selectedToilet={selectedToilet} />}
+            element={
+              <ReviewList
+                selectedToilet={selectedToilet}
+                selectedToiletAddress={selectedToiletAddress}
+              />
+            }
           />
+          {/* LikedToiletList */}
           <Route
             path="/:id"
-            element={<LikedToiletList userEmail={user.email} />}
+            element={
+              <LikedToiletList
+                userEmail={user.email}
+                toiletsData={toiletsData}
+                usersLikesData={usersLikesData}
+              />
+            }
           />
         </Routes>
       </header>

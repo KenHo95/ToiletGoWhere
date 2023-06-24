@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Map from "./Map";
-
 import { realTimeDatabase } from "../firebase";
 import {
   onChildAdded,
   ref as realTimeDatabaseRef,
   update,
-  remove,
 } from "firebase/database";
 
 // styling for heart likes
@@ -39,25 +36,18 @@ const StyledRating = styled(Rating)({
 });
 
 // initialise firebase RTD reference
-const DB_TOILETDATA_KEY = "ToiletData";
 const DB_APPDATA_KEY = "AppData";
 
 //
 function ToiletList(props) {
-  const [toiletsData, setToiletsData] = useState([]);
-  const [usersLikesData, setUsersLikesData] = useState({});
+  // const [usersLikesData, setUsersLikesData] = useState({});
   const [toiletRatingsData, setToiletRatingsData] = useState([]);
   const navigate = useNavigate();
 
   // set relevant refs
-  const ToiletsDataRef = realTimeDatabaseRef(
-    realTimeDatabase,
-    DB_TOILETDATA_KEY
-  );
-
   const UsersLikesRef = realTimeDatabaseRef(
     realTimeDatabase,
-    DB_APPDATA_KEY + `/LikedToilets/${props.userEmail.split(".")[0]}/`
+    DB_APPDATA_KEY + `/LikedToilets/${props.userEmail.split(".")[0]}/` // format userEmail to firebase acceptable format
   );
 
   const ToiletRatingsRef = realTimeDatabaseRef(
@@ -66,57 +56,24 @@ function ToiletList(props) {
   );
 
   useEffect(() => {
-    props.userEmail && // ask khairul
-      onChildAdded(ToiletsDataRef, (data) => {
-        console.log("toiletsData added");
-
-        setToiletsData((prev) => [...prev, { key: data.key, val: data.val() }]);
-      });
-
-    props.userEmail &&
-      onChildAdded(UsersLikesRef, (data) => {
-        console.log("UsersLike added");
-
-        setUsersLikesData((prev) => ({
-          ...prev,
-          [data.key]: data.val(),
-        }));
-      });
-
     props.userEmail &&
       onChildAdded(ToiletRatingsRef, (data) => {
         console.log("ToiletRatings added");
 
-        setToiletRatingsData((prev) => [...prev, data.val()]);
+        setToiletRatingsData((prev) => [...prev, data.val()]); // get toilet ratings data
       });
 
     return () => {};
-  }, [props.userEmail]);
-
-  // console.log(UsersLikesData);
+  }, [props.userEmail]); // call useEffect twice to account for initial undefined useremail
 
   const handleLikeButtonClick = (toiletID, isLiked) => {
-    // console.log("writelike");
-
     // update data to firebase at toiletID ref (computed property name)
-    if (isLiked === 1) {
-      // like
-      update(UsersLikesRef, {
-        [toiletID]: true,
-      });
-    } else {
-      // unlike
-      remove(
-        realTimeDatabaseRef(
-          realTimeDatabase,
-          DB_APPDATA_KEY +
-            `/LikedToilets/${props.userEmail.split(".")[0]}/${toiletID}`
-        )
-      );
+    // set toilet id to true if user clicks like and null if user clicks unlike
+    update(UsersLikesRef, {
+      [toiletID]: isLiked === 1 ? true : null,
+    });
 
-      // update user like data locally
-      delete usersLikesData[toiletID];
-    }
+    delete props.usersLikesData[toiletID]; // update user's like data locally
   };
 
   const getAvgRatings = (toiletId) => {
@@ -131,75 +88,76 @@ function ToiletList(props) {
   };
 
   // create toilet list from toilet data
-  let toiletsListItems = toiletsData.map((toilet) => (
-    <div>
-      {/* Switch between main and liked toilet list */}
-      {(props.urlId === "LikedToiletList"
-        ? props.likedToiletData[toilet.key]
-        : true) && (
-        <li className={"toilet-list"} key={toilet.key}>
-          {/* like button */}
-          <StyledRating
-            name="customized-color"
-            defaultValue={usersLikesData[toilet.key] ? 1 : 0}
-            max={1}
-            onChange={(event, newValue) => {
-              handleLikeButtonClick(toilet.key, newValue);
-            }}
-            icon={<FavoriteIcon fontSize="inherit" />}
-            emptyIcon={
-              <FavoriteBorderIcon fontSize="inherit" color="secondary" />
-            }
-          />{" "}
-          {/* <span>{toilet.val.Address}</span>{" "} */}
-          <Button
-            variant="contained"
-            onClick={() => {
-              props.handleMarkerClick(
-                toilet.key,
-                toilet.val.Latitude,
-                toilet.val.Longgitude,
-                toilet.val.Address
-              );
-            }}
-          >
-            {toilet.val.Address + " "}
-            {!isNaN(getAvgRatings(toilet.key)) && (
-              <Rating
-                name="read-only"
-                value={getAvgRatings(toilet.key)}
-                readOnly
-              />
-            )}
-          </Button>{" "}
-          {/* direction button
-           */}
-          <Fab variant="extended" size="small" color="primary" aria-label="add">
-            <NavigationIcon sx={{ mr: 0 }} />
-          </Fab>{" "}
-          <Fab
-            variant="extended"
-            size="small"
-            color="primary"
-            aria-label="add"
-            onClick={() => {
-              props.setselectedToilet(toilet.key);
-              navigate("/ReviewList"); // navigate to review list when clicked
-            }}
-          >
-            <ReviewsIcon sx={{ mr: 0 }} />
-          </Fab>
-        </li>
-      )}
-    </div>
-  ));
+  let toiletsListItems = props.toiletsData.map(
+    ({ Address, Area, Name, Type, lat, lng }, Ind) => (
+      <div>
+        {/* Switch between main and liked toilet list */}
+        {(props.urlId === "LikedToiletList"
+          ? props.likedToiletData[Ind] // render if user toilet like is true, else dont render
+          : true) && (
+          <li className={"toilet-list"} key={Ind}>
+            {/* like button
+             */}
+            <StyledRating
+              name="customized-color"
+              defaultValue={props.usersLikesData[Ind] ? 1 : 0}
+              max={1}
+              onChange={(event, newValue) => {
+                handleLikeButtonClick(Ind, newValue);
+              }}
+              icon={<FavoriteIcon fontSize="inherit" />}
+              emptyIcon={
+                <FavoriteBorderIcon fontSize="inherit" color="secondary" />
+              }
+            />{" "}
+            {/* Toilet address button
+             */}
+            <Button
+              variant="contained"
+              onClick={() => {
+                props.handleMarkerClick(Ind, lat, lng, Address);
+              }}
+            >
+              {Address + " "}
+              {!isNaN(getAvgRatings(Ind)) && (
+                <Rating name="read-only" value={getAvgRatings(Ind)} readOnly />
+              )}
+            </Button>{" "}
+            {/* direction button
+             */}
+            <Fab
+              variant="extended"
+              size="small"
+              color="primary"
+              aria-label="add"
+            >
+              <NavigationIcon sx={{ mr: 0 }} />
+            </Fab>{" "}
+            {/* Show toilet reviews button
+             */}
+            <Fab
+              variant="extended"
+              size="small"
+              color="primary"
+              aria-label="add"
+              onClick={() => {
+                props.setselectedToilet(Ind);
+                props.setselectedToiletAddress(Address);
+                navigate("/ReviewList"); // navigate to review list when clicked
+              }}
+            >
+              <ReviewsIcon sx={{ mr: 0 }} />
+            </Fab>
+          </li>
+        )}
+      </div>
+    )
+  );
 
   return (
     // display toilet list
-
     <div>
       <ol>{toiletsListItems}</ol>
-      {/* {console.log(usersLikesData)} */}
       <br />
       <br />
       <br />
