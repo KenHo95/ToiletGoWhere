@@ -70,7 +70,7 @@ function App() {
       <header className="App-header">
         <h1>ToiletGoWhere</h1>
         <div>
-          {/* Auth Form */}
+          {/* Auth Form / Welcome Messsage*/}
           {user.email !== "" ? (
             <div>
               <h2>Welcome back {user.email}!</h2>

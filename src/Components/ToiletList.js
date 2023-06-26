@@ -7,25 +7,20 @@ import {
   update,
 } from "firebase/database";
 
-// styling for heart likes
+// styling
+// heart likes
 import { styled } from "@mui/material/styles";
 import Rating from "@mui/material/Rating";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-
-// styling for toilet button
+// toilet button
 import Button from "@mui/material/Button";
-
-// styling for direction button
+// direction button
 import Fab from "@mui/material/Fab";
 import NavigationIcon from "@mui/icons-material/Navigation";
-
-// styling for review button
+// review button
 import ReviewsIcon from "@mui/icons-material/Reviews";
-
-// styling for average ratings
-
-// styling - color of like hearts
+// color of like hearts
 const StyledRating = styled(Rating)({
   "& .MuiRating-iconFilled": {
     color: "#ff6d75",
@@ -95,7 +90,7 @@ function ToiletList(props) {
         {(props.urlId === "LikedToiletList"
           ? props.likedToiletData[Ind] // render if user toilet like is true, else dont render
           : true) && (
-          <li className={"toilet-list"} key={Ind}>
+          <li className={"toilet-item"} key={Ind}>
             {/* like button
              */}
             <StyledRating
@@ -157,7 +152,9 @@ function ToiletList(props) {
   return (
     // display toilet list
     <div>
-      <ol>{toiletsListItems}</ol>
+      <ol id="toilet-list" class="better_scrollbar">
+        {toiletsListItems}
+      </ol>
       <br />
       <br />
       <br />

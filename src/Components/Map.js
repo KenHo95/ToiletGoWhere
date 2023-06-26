@@ -38,42 +38,44 @@ const Map = (props) => {
   };
 
   return (
-    <div className="App">
-      {!isLoaded ? (
-        <h1>Loading...</h1>
-      ) : (
-        <GoogleMap
-          mapContainerClassName="map-container"
-          onLoad={onMapLoad}
-          onClick={() => setIsOpen(false)}
-        >
-          {props.toiletsData.map(
-            ({ Address, Area, Name, Type, lat, lng }, Ind) => (
-              <MarkerF
-                key={Ind}
-                position={{ lat, lng }}
-                icon={{
-                  url: toiletIcon,
-                  scaledSize: new window.google.maps.Size(50, 50),
-                }}
-                onClick={() => {
-                  handleMarkerClick(Ind, lat, lng, Address);
-                }}
-              >
-                {isOpen && infoWindowData?.id === Ind && (
-                  <InfoWindow
-                    onCloseClick={() => {
-                      setIsOpen(false);
-                    }}
-                  >
-                    <h3>{infoWindowData.address}</h3>
-                  </InfoWindow>
-                )}
-              </MarkerF>
-            )
-          )}
-        </GoogleMap>
-      )}
+    <div>
+      <div className="Map">
+        {!isLoaded ? (
+          <h1>Loading...</h1>
+        ) : (
+          <GoogleMap
+            mapContainerClassName="map-container"
+            onLoad={onMapLoad}
+            onClick={() => setIsOpen(false)}
+          >
+            {props.toiletsData.map(
+              ({ Address, Area, Name, Type, lat, lng }, Ind) => (
+                <MarkerF
+                  key={Ind}
+                  position={{ lat, lng }}
+                  icon={{
+                    url: toiletIcon,
+                    scaledSize: new window.google.maps.Size(50, 50),
+                  }}
+                  onClick={() => {
+                    handleMarkerClick(Ind, lat, lng, Address);
+                  }}
+                >
+                  {isOpen && infoWindowData?.id === Ind && (
+                    <InfoWindow
+                      onCloseClick={() => {
+                        setIsOpen(false);
+                      }}
+                    >
+                      <h3>{infoWindowData.address}</h3>
+                    </InfoWindow>
+                  )}
+                </MarkerF>
+              )
+            )}
+          </GoogleMap>
+        )}
+      </div>
       <ToiletList
         toiletsData={props.toiletsData}
         usersLikesData={props.usersLikesData}
