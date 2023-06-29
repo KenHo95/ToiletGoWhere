@@ -161,3 +161,15 @@ body {
 .better_scrollbar {
   overflow-x: hidden !important;
 }
+
+/*****************************
+ Review List 
+ *****************************/
+.review-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.info-window {
+  color: black;
+}

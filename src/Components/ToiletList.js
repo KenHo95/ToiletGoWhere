@@ -83,7 +83,7 @@ function ToiletList(props) {
   };
 
   // create toilet list from toilet data
-  let toiletsListItems = props.toiletsData.map(
+  let toiletsListItems = props.toiletsToDisplay.map(
     ({ Address, Area, Name, Type, lat, lng }, Ind) => (
       <div>
         {/* Switch between main and liked toilet list */}
@@ -152,7 +152,10 @@ function ToiletList(props) {
   return (
     // display toilet list
     <div>
-      <ol id="toilet-list" class="better_scrollbar">
+      <ol
+        id="toilet-list"
+        className={!props.showNearbyToilets ? "better_scrollbar" : null}
+      >
         {toiletsListItems}
       </ol>
       <br />
