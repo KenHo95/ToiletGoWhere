@@ -9,11 +9,14 @@ import { auth } from "./firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { realTimeDatabase } from "./firebase";
 import { onChildAdded, ref as realTimeDatabaseRef } from "firebase/database";
+import getDistance from "geolib/es/getDistance";
+
 // import CssBaseline from "@mui/material/CssBaseline";
 
 // import Header from "./Components/Header";
 import ReviewList from "./Components/ReviewList";
 import LikedToiletList from "./Components/LikedToiletList";
+import { orderByDistance } from "geolib";
 
 const DB_TOILETDATA_KEY = "ToiletData";
 const DB_APPDATA_KEY = "AppData";
@@ -25,6 +28,8 @@ function App() {
   const [user, setUser] = useState({ email: "" });
   const [toiletsData, setToiletsData] = useState([]);
   const [usersLikesData, setUsersLikesData] = useState({ 0: null });
+  const [userLocation, setUserLocation] = useState({});
+  const [nearbyToilets, setNearbyToilets] = useState([]);
 
   const ToiletsDataRef = realTimeDatabaseRef(
     realTimeDatabase,
@@ -35,6 +40,48 @@ function App() {
     realTimeDatabase,
     DB_APPDATA_KEY + `/LikedToilets/${user.email.split(".")[0]}/` // format userEmail to firebase acceptable format
   );
+
+  function success(position) {
+    const userPosition = {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+    };
+    setUserLocation(userPosition);
+    console.log(
+      `Latitude: ${userPosition.latitude}, Longitude: ${userPosition.longitude}`
+    );
+  }
+
+  function error() {
+    console.log("Unable to retrieve user location");
+  }
+
+  const getUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(success, error);
+    } else {
+      console.log("Geolocation not supported");
+    }
+  };
+
+  const findNearestToilets = () => {
+    let coordsArray = [];
+    toiletsData.map((toilet) =>
+      coordsArray.push({ latitude: toilet.lat, longitude: toilet.lng })
+    );
+
+    let nearestToilets = orderByDistance(userLocation, coordsArray).slice(0, 5);
+    let result = toiletsData.filter((toilet) => {
+      return nearestToilets.some((nearestToilet) => {
+        return toilet.lat === nearestToilet.latitude;
+      });
+    });
+    // console.log(userLocation);
+    // console.log(toiletsData.slice(0, 5));
+    // console.log(nearestToilets.slice(0, 5));
+    // console.log(result);
+    setNearbyToilets(result);
+  };
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -58,6 +105,8 @@ function App() {
         }));
       });
 
+    getUserLocation();
+
     return () => {};
   }, [user.email]);
 
@@ -67,11 +116,13 @@ function App() {
     //   <Header />
 
     <div className="App">
+      {/* {(userLocation !== {} && toiletsData !== [] && )findNearestToilets()} */}
+      {/* {console.log(toiletsData)} */}
       <header className="App-header">
         <h1>ToiletGoWhere</h1>
         <div>
           {/* Auth Form / Welcome Messsage*/}
-          {user.email !== "" ? (
+          {user.email ? (
             <div>
               <h2>Welcome back {user.email}!</h2>
               <button
@@ -107,6 +158,9 @@ function App() {
                 setselectedToilet={setselectedToilet}
                 setselectedToiletAddress={setselectedToiletAddress}
                 userEmail={user.email}
+                findNearestToilets={findNearestToilets}
+                userLocation={userLocation}
+                nearbyToilets={nearbyToilets}
               />
             }
           />
