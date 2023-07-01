@@ -6,7 +6,10 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 110vh;
+
+  min-height: 100%;
+
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -45,23 +48,6 @@ html {
 *::after {
   box-sizing: inherit;
 }
-
-/* .upload-review-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1; 
-}
-.map-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-} */
 
 .Map {
   height: 60vh;
@@ -115,7 +101,7 @@ html {
 
 body {
   text-align: center;
-  /* padding-top: 2rem; */
+
 }
 
 /*****************************
@@ -161,6 +147,30 @@ body {
 .better_scrollbar {
   overflow-x: hidden !important;
 }
+
+.header {
+  background-color: #282c34;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.search-wrapper {
+  margin-left: 20px;
+}
+
+.search-input {
+  width: 200px;
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+}
+
+.menu-icon {
+  color: white;
 
 /*****************************
  Review List 
