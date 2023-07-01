@@ -9,11 +9,8 @@ import { auth } from "./firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { realTimeDatabase } from "./firebase";
 import { onChildAdded, ref as realTimeDatabaseRef } from "firebase/database";
-import getDistance from "geolib/es/getDistance";
 
-// import CssBaseline from "@mui/material/CssBaseline";
-
-// import Header from "./Components/Header";
+import ToiletList from "./Components/ToiletList";
 import ReviewList from "./Components/ReviewList";
 import LikedToiletList from "./Components/LikedToiletList";
 import { orderByDistance } from "geolib";
@@ -30,6 +27,10 @@ function App() {
   const [usersLikesData, setUsersLikesData] = useState({ 0: null });
   const [userLocation, setUserLocation] = useState({});
   const [nearbyToilets, setNearbyToilets] = useState([]);
+  const [map, setMap] = useState();
+  const [isOpen, setIsOpen] = useState(false);
+  const [infoWindowData, setInfoWindowData] = useState();
+  const [showNearbyToilets, setShowNearbyToilets] = useState(false);
 
   const ToiletsDataRef = realTimeDatabaseRef(
     realTimeDatabase,
@@ -83,6 +84,22 @@ function App() {
     setNearbyToilets(result);
   };
 
+  // set default map display to toilets that are near user's location
+  const onLoad = (map) => {
+    setMap(map);
+    const bounds = new window.google.maps.LatLngBounds();
+    // props.nearbyToilets?.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
+    toiletsData?.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
+    map.fitBounds(bounds);
+  };
+
+  // pan to toilet location on toilet list click
+  const handleMarkerClick = (id, lat, lng, address) => {
+    map?.panTo({ lat, lng });
+    setInfoWindowData({ id, address });
+    setIsOpen(true);
+  };
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -109,6 +126,8 @@ function App() {
 
     return () => {};
   }, [user.email]);
+
+  let toiletsToDisplay = showNearbyToilets ? nearbyToilets : toiletsData;
 
   return (
     // <>
@@ -140,6 +159,28 @@ function App() {
         </div>
         <br />
 
+        <Map
+          toiletsData={toiletsData}
+          usersLikesData={usersLikesData}
+          selectedToilet={selectedToilet}
+          setselectedToilet={setselectedToilet}
+          setselectedToiletAddress={setselectedToiletAddress}
+          userEmail={user.email}
+          findNearestToilets={findNearestToilets}
+          userLocation={userLocation}
+          nearbyToilets={nearbyToilets}
+          showNearbyToilets={showNearbyToilets}
+          setShowNearbyToilets={setShowNearbyToilets}
+          map={map}
+          setMap={setMap}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          infoWindowData={infoWindowData}
+          setInfoWindowData={setInfoWindowData}
+          onLoad={onLoad}
+          handleMarkerClick={handleMarkerClick}
+        />
+
         {/* Links */}
         <Link to="/">Home</Link>
         <Link to="/LikedToiletList">Liked</Link>
@@ -151,16 +192,14 @@ function App() {
           <Route
             path="/"
             element={
-              <Map
-                toiletsData={toiletsData}
+              <ToiletList
+                toiletsToDisplay={toiletsToDisplay}
                 usersLikesData={usersLikesData}
-                selectedToilet={selectedToilet}
                 setselectedToilet={setselectedToilet}
                 setselectedToiletAddress={setselectedToiletAddress}
                 userEmail={user.email}
-                findNearestToilets={findNearestToilets}
-                userLocation={userLocation}
-                nearbyToilets={nearbyToilets}
+                handleMarkerClick={handleMarkerClick}
+                showNearbyToilets={showNearbyToilets}
               />
             }
           />

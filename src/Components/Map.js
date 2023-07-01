@@ -5,11 +5,10 @@ import {
   InfoWindow,
 } from "@react-google-maps/api";
 import "../App.css";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import toiletIcon from "../toileticon.png";
 import userIcon from "../userIcon.png";
-import ToiletList from "./ToiletList";
 
 import Switch from "@mui/material/Switch";
 import FormControl from "@mui/material/FormControl";
@@ -19,10 +18,6 @@ const Map = (props) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
-  const [map, setMap] = useState();
-  const [isOpen, setIsOpen] = useState(false);
-  const [infoWindowData, setInfoWindowData] = useState();
-  const [showNearbyToilets, setShowNearbyToilets] = useState(false);
 
   useEffect(() => {
     if (props.userLocation !== {} && props.toiletsData !== [])
@@ -30,22 +25,6 @@ const Map = (props) => {
 
     return () => {};
   }, [props.userLocation]);
-
-  // set default map display to toilets that are near user's location
-  const onLoad = (map) => {
-    setMap(map);
-    const bounds = new window.google.maps.LatLngBounds();
-    // props.nearbyToilets?.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
-    props.toiletsData?.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
-    map.fitBounds(bounds);
-  };
-
-  // pan to toilet location on toilet list click
-  const handleMarkerClick = (id, lat, lng, address) => {
-    map?.panTo({ lat, lng });
-    setInfoWindowData({ id, address });
-    setIsOpen(true);
-  };
 
   // markers to set map bound to show whole of singapore
   const markers = [
@@ -68,8 +47,8 @@ const Map = (props) => {
 
   useEffect(() => {
     // to toggle map bound on show nearby button click
-    if (map) {
-      let toiletsLocationBound = showNearbyToilets
+    if (props.map) {
+      let toiletsLocationBound = props.showNearbyToilets
         ? props.nearbyToilets
         : markers;
 
@@ -80,12 +59,12 @@ const Map = (props) => {
           lng: marker.lng,
         });
       });
-      map.fitBounds(bounds);
+      props.map.fitBounds(bounds);
     }
-  }, [showNearbyToilets]);
+  }, [props.showNearbyToilets]);
 
   // toggle btw full and nearby toilets display
-  let toiletsToDisplay = showNearbyToilets
+  let toiletsToDisplay = props.showNearbyToilets
     ? props.nearbyToilets
     : props.toiletsData;
 
@@ -98,8 +77,8 @@ const Map = (props) => {
         ) : (
           <GoogleMap
             mapContainerClassName="map-container"
-            onLoad={onLoad}
-            onClick={() => setIsOpen(false)}
+            onLoad={props.onLoad}
+            onClick={() => props.setIsOpen(false)}
           >
             {/* Toilet markers */}
             {toiletsToDisplay.map(
@@ -112,16 +91,18 @@ const Map = (props) => {
                     scaledSize: new window.google.maps.Size(50, 50),
                   }}
                   onClick={() => {
-                    handleMarkerClick(Ind, lat, lng, Address);
+                    props.handleMarkerClick(Ind, lat, lng, Address);
                   }}
                 >
-                  {isOpen && infoWindowData?.id === Ind && (
+                  {props.isOpen && props.infoWindowData?.id === Ind && (
                     <InfoWindow
                       onCloseClick={() => {
-                        setIsOpen(false);
+                        props.setIsOpen(false);
                       }}
                     >
-                      <h3 className="info-window">{infoWindowData.address}</h3>
+                      <h3 className="info-window">
+                        {props.infoWindowData.address}
+                      </h3>
                     </InfoWindow>
                   )}
                 </MarkerF>
@@ -147,10 +128,12 @@ const Map = (props) => {
         <FormControlLabel
           control={
             <Switch
-              checked={showNearbyToilets}
+              checked={props.showNearbyToilets}
               onChange={(e) => {
-                setShowNearbyToilets(showNearbyToilets === 0 ? 1 : 0);
-                setIsOpen(false);
+                props.setShowNearbyToilets(
+                  props.showNearbyToilets ? false : true
+                );
+                props.setIsOpen(false);
                 // onMapChange();
               }}
             />
@@ -159,7 +142,7 @@ const Map = (props) => {
         />
       </FormControl>
 
-      <ToiletList
+      {/* <ToiletList
         toiletsToDisplay={toiletsToDisplay}
         usersLikesData={props.usersLikesData}
         setselectedToilet={props.setselectedToilet}
@@ -167,7 +150,7 @@ const Map = (props) => {
         userEmail={props.userEmail}
         handleMarkerClick={handleMarkerClick}
         showNearbyToilets={showNearbyToilets}
-      />
+      /> */}
     </div>
   );
 };
