@@ -63,16 +63,12 @@ const Map = (props) => {
     }
   }, [props.showNearbyToilets]);
 
-  // toggle btw full and nearby toilets display
-  let toiletsToDisplay = props.showNearbyToilets
-    ? props.nearbyToilets
-    : props.toiletsData;
-
   return (
     <div>
+      {/* {console.log(props.toiletsToDisplay)}{" "} */}
       <div className="Map">
         {/* Show maps and toilet list display only on map and nearby toilets array loaded */}
-        {!isLoaded || props.nearbyToilets.length !== 5 ? (
+        {!isLoaded || props.toiletsToDisplay.length === 0 ? (
           <h1>Loading...</h1>
         ) : (
           <GoogleMap
@@ -81,7 +77,7 @@ const Map = (props) => {
             onClick={() => props.setIsOpen(false)}
           >
             {/* Toilet markers */}
-            {toiletsToDisplay.map(
+            {props.toiletsToDisplay.map(
               ({ Address, Area, Name, Type, lat, lng }, Ind) => (
                 <MarkerF
                   key={Ind}
@@ -124,24 +120,25 @@ const Map = (props) => {
         )}
       </div>
       {/* Toggle btw nearby/ full toilets location display */}
-      <FormControl component="fieldset" variant="standard">
-        <FormControlLabel
-          control={
-            <Switch
-              checked={props.showNearbyToilets}
-              onChange={(e) => {
-                props.setShowNearbyToilets(
-                  props.showNearbyToilets ? false : true
-                );
-                props.setIsOpen(false);
-                // onMapChange();
-              }}
-            />
-          }
-          label="Show Nearby"
-        />
-      </FormControl>
-
+      {props.nearbyToilets.length === 5 && (
+        <FormControl component="fieldset" variant="standard">
+          <FormControlLabel
+            control={
+              <Switch
+                checked={props.showNearbyToilets}
+                onChange={(e) => {
+                  props.setShowNearbyToilets(
+                    props.showNearbyToilets ? false : true
+                  );
+                  props.setIsOpen(false);
+                  // onMapChange();
+                }}
+              />
+            }
+            label="Show Nearby"
+          />
+        </FormControl>
+      )}
       {/* <ToiletList
         toiletsToDisplay={toiletsToDisplay}
         usersLikesData={props.usersLikesData}

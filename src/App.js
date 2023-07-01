@@ -105,11 +105,18 @@ function App() {
         setUser(user);
       }
     });
-    user.email &&
-      onChildAdded(ToiletsDataRef, (data) => {
-        setToiletsData((prev) => [...prev, data.val()]);
-      });
+    // user.email &&
+    onChildAdded(ToiletsDataRef, (data) => {
+      console.log("ToiletsDataRef");
+      setToiletsData((prev) => [...prev, data.val()]);
+    });
 
+    getUserLocation();
+
+    return () => {};
+  }, []);
+
+  useEffect(() => {
     user.email &&
       onChildAdded(UsersLikesRef, (data) => {
         console.log("UsersLike added");
@@ -120,12 +127,10 @@ function App() {
           [data.key]: data.val(),
         }));
       });
-
-    getUserLocation();
-
     return () => {};
   }, [user.email]);
 
+  // toggle btw full and nearby toilets display
   let toiletsToDisplay = showNearbyToilets ? nearbyToilets : toiletsData;
 
   return (
@@ -178,6 +183,7 @@ function App() {
           setInfoWindowData={setInfoWindowData}
           onLoad={onLoad}
           handleMarkerClick={handleMarkerClick}
+          toiletsToDisplay={toiletsToDisplay}
         />
 
         {/* Links */}

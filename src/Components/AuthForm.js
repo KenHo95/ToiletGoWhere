@@ -22,6 +22,8 @@ export default function AuthForm() {
     console.log(user);
     setEmail("");
     setPassword("");
+    // eslint-disable-next-line no-restricted-globals
+    location.reload();
   };
 
   return (
