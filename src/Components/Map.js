@@ -29,17 +29,17 @@ const Map = (props) => {
   // markers to set map bound to show whole of singapore
   const markers = [
     {
-      address: "20 Tuas West Drive, S(638418)",
+      // address: "20 Tuas West Drive, S(638418)",
       lat: 1.34,
       lng: 103.63681,
     },
     {
-      address: "60 Woodlands Industrial Park E4, S(757705)",
+      // address: "60 Woodlands Industrial Park E4, S(757705)",
       lat: 1.448472,
       lng: 103.79445,
     },
     {
-      address: "2 Changi Village Road, S(500002)",
+      // address: "2 Changi Village Road, S(500002)",
       lat: 1.389152,
       lng: 103.988245,
     },
@@ -105,17 +105,19 @@ const Map = (props) => {
               )
             )}
             {/* User marker*/}
-            <MarkerF
-              key="userLoc"
-              position={{
-                lat: props.userLocation.latitude,
-                lng: props.userLocation.longitude,
-              }}
-              icon={{
-                url: userIcon,
-                scaledSize: new window.google.maps.Size(60, 60),
-              }}
-            ></MarkerF>
+            {props.nearbyToilets.length === 5 && (
+              <MarkerF
+                key="userLoc"
+                position={{
+                  lat: props.userLocation.latitude,
+                  lng: props.userLocation.longitude,
+                }}
+                icon={{
+                  url: userIcon,
+                  scaledSize: new window.google.maps.Size(60, 60),
+                }}
+              ></MarkerF>
+            )}
           </GoogleMap>
         )}
       </div>

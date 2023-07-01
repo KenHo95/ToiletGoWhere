@@ -152,6 +152,8 @@ function App() {
                 onClick={(e) => {
                   signOut(auth);
                   setUser({ email: "" });
+                  // eslint-disable-next-line no-restricted-globals
+                  location.reload(); // to refresh user linked states
                 }}
               >
                 Logout!

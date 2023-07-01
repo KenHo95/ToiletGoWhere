@@ -23,7 +23,7 @@ export default function AuthForm() {
     setEmail("");
     setPassword("");
     // eslint-disable-next-line no-restricted-globals
-    location.reload();
+    location.reload(); // to refresh user linked states
   };
 
   return (
@@ -31,7 +31,7 @@ export default function AuthForm() {
       <label>Email</label>
       <br />
       <input
-        type="text"
+        type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Email Here"
@@ -40,7 +40,7 @@ export default function AuthForm() {
       <label>Password</label>
       <br />
       <input
-        type="text"
+        type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password Here"
