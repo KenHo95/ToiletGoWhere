@@ -88,7 +88,6 @@ function App() {
   const onLoad = (map) => {
     setMap(map);
     const bounds = new window.google.maps.LatLngBounds();
-    // props.nearbyToilets?.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
     toiletsData?.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
     map.fitBounds(bounds);
   };
@@ -220,7 +219,7 @@ function App() {
             element={
               <LikedToiletList
                 userEmail={user.email}
-                toiletsData={toiletsData}
+                toiletsToDisplay={toiletsToDisplay}
                 usersLikesData={usersLikesData}
               />
             }

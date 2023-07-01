@@ -35,7 +35,7 @@ function LikedToiletList(props) {
     <div>
       <Button onClick={() => navigate("/")}> back </Button>
       <ToiletList
-        toiletsData={props.toiletsData}
+        toiletsToDisplay={props.toiletsToDisplay}
         likedToiletData={likedToiletData}
         usersLikesData={props.usersLikesData}
         urlId={id}
