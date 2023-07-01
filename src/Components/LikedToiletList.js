@@ -16,17 +16,18 @@ function LikedToiletList(props) {
   );
 
   useEffect(() => {
-    onChildAdded(LikedToiletRef, (data) => {
-      console.log("LikedToilet added");
+    props.userEmail &&
+      onChildAdded(LikedToiletRef, (data) => {
+        console.log("LikedToilet added");
 
-      setLikedToiletData((prev) => ({
-        ...prev,
-        [data.key]: data.val(),
-      }));
-    });
+        setLikedToiletData((prev) => ({
+          ...prev,
+          [data.key]: data.val(),
+        }));
+      });
 
     return () => {};
-  }, []);
+  }, [props.userEmail]);
 
   return (
     <div>
