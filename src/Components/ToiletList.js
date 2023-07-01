@@ -35,7 +35,6 @@ const DB_APPDATA_KEY = "AppData";
 
 //
 function ToiletList(props) {
-  // const [usersLikesData, setUsersLikesData] = useState({});
   const [toiletRatingsData, setToiletRatingsData] = useState([]);
   const navigate = useNavigate();
 
