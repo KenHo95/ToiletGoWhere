@@ -11,6 +11,7 @@ import { auth } from "./firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { realTimeDatabase } from "./firebase";
 import { onChildAdded, ref as realTimeDatabaseRef } from "firebase/database";
+
 import ReviewList from "./Components/ReviewList";
 import LikedToiletList from "./Components/LikedToiletList";
 import { styled } from "@mui/system";
@@ -108,6 +109,11 @@ const StyledTabsList = styled(TabsList)(
   `
 );
 
+import ReviewList from "./Components/ReviewList";
+import LikedToiletList from "./Components/LikedToiletList";
+import { orderByDistance } from "geolib";
+
+
 const DB_TOILETDATA_KEY = "ToiletData";
 const DB_APPDATA_KEY = "AppData";
 
@@ -115,11 +121,14 @@ function App() {
   const [mapRef, setMapRef] = useState();
   const [isOpen, setIsOpen] = useState(false);
   const [infoWindowData, setInfoWindowData] = useState();
+ const [showNearbyToilets, setShowNearbyToilets] = useState(false);
 
-  const onMapLoad = (map) => {
-    setMapRef(map);
+
+   const onLoad = (map) => {
+    setMap(map);
     const bounds = new window.google.maps.LatLngBounds();
-    markers?.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
+    // props.nearbyToilets?.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
+    props.toiletsData?.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
     map.fitBounds(bounds);
   };
 
@@ -148,6 +157,8 @@ function App() {
   const [user, setUser] = useState({ email: "" });
   const [toiletsData, setToiletsData] = useState([]);
   const [usersLikesData, setUsersLikesData] = useState({ 0: null });
+  const [userLocation, setUserLocation] = useState({});
+  const [nearbyToilets, setNearbyToilets] = useState([]);
 
   const ToiletsDataRef = realTimeDatabaseRef(
     realTimeDatabase,
@@ -158,6 +169,48 @@ function App() {
     realTimeDatabase,
     DB_APPDATA_KEY + `/LikedToilets/${user.email.split(".")[0]}/` // format userEmail to firebase acceptable format
   );
+
+  function success(position) {
+    const userPosition = {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+    };
+    setUserLocation(userPosition);
+    console.log(
+      `Latitude: ${userPosition.latitude}, Longitude: ${userPosition.longitude}`
+    );
+  }
+
+  function error() {
+    console.log("Unable to retrieve user location");
+  }
+
+  const getUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(success, error);
+    } else {
+      console.log("Geolocation not supported");
+    }
+  };
+
+  const findNearestToilets = () => {
+    let coordsArray = [];
+    toiletsData.map((toilet) =>
+      coordsArray.push({ latitude: toilet.lat, longitude: toilet.lng })
+    );
+
+    let nearestToilets = orderByDistance(userLocation, coordsArray).slice(0, 5);
+    let result = toiletsData.filter((toilet) => {
+      return nearestToilets.some((nearestToilet) => {
+        return toilet.lat === nearestToilet.latitude;
+      });
+    });
+    // console.log(userLocation);
+    // console.log(toiletsData.slice(0, 5));
+    // console.log(nearestToilets.slice(0, 5));
+    // console.log(result);
+    setNearbyToilets(result);
+  };
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -181,15 +234,19 @@ function App() {
         }));
       });
 
+    getUserLocation();
+
     return () => {};
   }, [user.email]);
 
   return (
     <div className="App">
+      {/* {(userLocation !== {} && toiletsData !== [] && )findNearestToilets()} */}
+      {/* {console.log(toiletsData)} */}
       <header className="App-header">
         <div>
           {/* Auth Form / Welcome Messsage*/}
-          {user.email !== "" ? (
+          {user.email ? (
             <div>
               <h2>Welcome back {user.email}!</h2>
               <button
@@ -220,10 +277,11 @@ function App() {
             setselectedToilet={setselectedToilet}
             setselectedToiletAddress={setselectedToiletAddress}
             userEmail={user.email}
-            onMapLoad={onMapLoad}
+            onLoad={onLoad}
             handleMarkerClick={handleMarkerClick}
             mapRef={mapRef}
             isOpen={isOpen}
+setIsOpen={setIsOpen}
             infoWindowData={infoWindowData}
           />
           <Tabs defaultValue={0}>
@@ -245,6 +303,7 @@ function App() {
             <StyledTabPanel value={1}> </StyledTabPanel>
             <StyledTabPanel value={2}></StyledTabPanel> */}
 
+
             <Routes>
               {/* ToiletList */}
               <Route
@@ -257,6 +316,8 @@ function App() {
                     setselectedToiletAddress={setselectedToiletAddress}
                     userEmail={user.email}
                     handleMarkerClick={handleMarkerClick}
+        showNearbyToilets={showNearbyToilets}
+setShowNearbyToilets= {setShowNearbyToilets}
                   />
                 }
               />

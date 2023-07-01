@@ -31,22 +31,20 @@ function ReviewList(props) {
   }, []);
 
   let reviewListItems = toiletReviewsData.map((review) => (
-    <div>
-      <li className={"toilet-list"} key={review.key}>
-        {/* like button */}
-        <p>Date: {review.val.date}</p>
-        <p>User: {review.val.email}</p>
-        <Rating name="read-only" value={review.val.rating} readOnly />
-        <p>Review: {review.val.review}</p>
-        {review.val.uploadURL !== "" && (
-          <img
-            style={{ width: 100, height: 100 }}
-            src={review.val.uploadURL}
-            alt="img"
-          />
-        )}
-      </li>
-    </div>
+    <li key={review.key}>
+      {/* like button */}
+      <p>Date: {review.val.date}</p>
+      <p>User: {review.val.email}</p>
+      <Rating name="read-only" value={review.val.rating} readOnly />
+      <p>Review: {review.val.review}</p>
+      {review.val.uploadURL !== "" && (
+        <img
+          style={{ width: 100, height: 100 }}
+          src={review.val.uploadURL}
+          alt="img"
+        />
+      )}
+    </li>
   ));
 
   return (
@@ -54,7 +52,7 @@ function ReviewList(props) {
       <h1>{props.selectedToiletAddress}</h1>
       <UploadReview selectedToilet={props.selectedToilet} />
       <h1>Reviews</h1>
-      {reviewListItems}
+      <ul className={"review-list"}>{reviewListItems}</ul>
     </div>
   );
 }

@@ -5,50 +5,109 @@ import {
   InfoWindow,
 } from "@react-google-maps/api";
 import "../App.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import toiletIcon from "../toileticon.png";
-// import ToiletList from "./ToiletList";
+
+import userIcon from "../userIcon.png";
+import ToiletList from "./ToiletList";
+
+import Switch from "@mui/material/Switch";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 const Map = (props) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
-  // const [mapRef, setMapRef] = useState();
-  // const [isOpen, setIsOpen] = useState(false);
-  // const [infoWindowData, setInfoWindowData] = useState();
 
-  // const markers = [
-  //   { address: "Bishan Bus Interchange", lat: 1.350139, lng: 103.849757 },
-  //   { address: "Harbourfront Bus Terminal", lat: 1.266871, lng: 103.819193 },
-  //   { address: "Yio Chu Kang Bus Interchange", lat: 1.373912, lng: 103.849592 },
-  // ];
+//   const [map, setMap] = useState();
+//   const [isOpen, setIsOpen] = useState(false);
+//   const [infoWindowData, setInfoWindowData] = useState();
+//   const [showNearbyToilets, setShowNearbyToilets] = useState(false);
 
-  // const onMapLoad = (map) => {
-  //   setMapRef(map);
-  //   const bounds = new window.google.maps.LatLngBounds();
-  //   markers?.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
-  //   map.fitBounds(bounds);
-  // };
+//   useEffect(() => {
+//     if (props.userLocation !== {} && props.toiletsData !== [])
+//       props.findNearestToilets();
 
-  // const handleMarkerClick = (id, lat, lng, address) => {
-  //   mapRef?.panTo({ lat, lng });
-  //   setInfoWindowData({ id, address });
-  //   setIsOpen(true);
-  // };
+//     return () => {};
+//   }, [props.userLocation]);
+
+//   // set default map display to toilets that are near user's location
+//   const onLoad = (map) => {
+//     setMap(map);
+//     const bounds = new window.google.maps.LatLngBounds();
+//     // props.nearbyToilets?.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
+//     props.toiletsData?.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
+//     map.fitBounds(bounds);
+//   };
+
+//   // pan to toilet location on toilet list click
+//   const handleMarkerClick = (id, lat, lng, address) => {
+//     map?.panTo({ lat, lng });
+//     setInfoWindowData({ id, address });
+//     setIsOpen(true);
+//   };
+
+
+  // markers to set map bound to show whole of singapore
+  const markers = [
+    {
+      address: "20 Tuas West Drive, S(638418)",
+      lat: 1.34,
+      lng: 103.63681,
+    },
+    {
+      address: "60 Woodlands Industrial Park E4, S(757705)",
+      lat: 1.448472,
+      lng: 103.79445,
+    },
+    {
+      address: "2 Changi Village Road, S(500002)",
+      lat: 1.389152,
+      lng: 103.988245,
+    },
+  ];
+
+  useEffect(() => {
+    // to toggle map bound on show nearby button click
+    if (map) {
+      let toiletsLocationBound = showNearbyToilets
+        ? props.nearbyToilets
+        : markers;
+
+      const bounds = new window.google.maps.LatLngBounds();
+      toiletsLocationBound.map((marker) => {
+        bounds.extend({
+          lat: marker.lat,
+          lng: marker.lng,
+        });
+      });
+      map.fitBounds(bounds);
+    }
+  }, [showNearbyToilets]);
+
+  // toggle btw full and nearby toilets display
+  let toiletsToDisplay = showNearbyToilets
+    ? props.nearbyToilets
+    : props.toiletsData;
 
   return (
     <div>
       <div className="Map">
-        {!isLoaded ? (
+        {/* Show maps and toilet list display only on map and nearby toilets array loaded */}
+        {!isLoaded || props.nearbyToilets.length !== 5 ? (
           <h1>Loading...</h1>
         ) : (
           <GoogleMap
             mapContainerClassName="map-container"
-            onLoad={props.onMapLoad}
+
+            onLoad={props.onLoad}
             onClick={() => props.setIsOpen(false)}
+
           >
-            {props.toiletsData.map(
+            {/* Toilet markers */}
+            {toiletsToDisplay.map(
               ({ Address, Area, Name, Type, lat, lng }, Ind) => (
                 <MarkerF
                   key={Ind}
@@ -67,25 +126,57 @@ const Map = (props) => {
                         props.setIsOpen(false);
                       }}
                     >
-                      <div style={{ color: "red" }}>
-                        <h3>{props.infoWindowData.address}</h3>
-                      </div>
+
+                      <h3 className="info-window">{infoWindowData.address}</h3>
+
                     </InfoWindow>
                   )}
                 </MarkerF>
               )
             )}
+            {/* User marker*/}
+            <MarkerF
+              key="userLoc"
+              position={{
+                lat: props.userLocation.latitude,
+                lng: props.userLocation.longitude,
+              }}
+              icon={{
+                url: userIcon,
+                scaledSize: new window.google.maps.Size(60, 60),
+              }}
+            ></MarkerF>
           </GoogleMap>
         )}
       </div>
-      {/* <ToiletList
-        toiletsData={props.toiletsData}
-        usersLikesData={props.usersLikesData}
-        setselectedToilet={props.setselectedToilet}
-        setselectedToiletAddress={props.setselectedToiletAddress}
-        userEmail={props.userEmail}
-        handleMarkerClick={handleMarkerClick}
-      /> */}
+
+      {/* Toggle btw nearby/ full toilets location display */}
+      <FormControl component="fieldset" variant="standard">
+        <FormControlLabel
+          control={
+            <Switch
+              checked={props.showNearbyToilets}
+              onChange={(e) => {
+                props.setShowNearbyToilets(props.showNearbyToilets === 0 ? 1 : 0);
+                props.setIsOpen(false);
+                // onMapChange();
+              }}
+            />
+          }
+          label="Show Nearby"
+        />
+      </FormControl>
+
+//       <ToiletList
+//         toiletsToDisplay={toiletsToDisplay}
+//         usersLikesData={props.usersLikesData}
+//         setselectedToilet={props.setselectedToilet}
+//         setselectedToiletAddress={props.setselectedToiletAddress}
+//         userEmail={props.userEmail}
+//         handleMarkerClick={handleMarkerClick}
+
+//         showNearbyToilets={showNearbyToilets}
+//       />
     </div>
   );
 };

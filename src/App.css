@@ -4,14 +4,12 @@
   width: 100vw;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
 .App-header {
   background-color: #282c34;
+
   min-height: 100%;
+
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -49,10 +47,6 @@ html {
 *::before,
 *::after {
   box-sizing: inherit;
-}
-body {
-  margin: 0;
-  padding: 0;
 }
 
 .Map {
@@ -107,45 +101,29 @@ body {
 
 body {
   text-align: center;
-}
-/* .toilet-list {
-  list-style: none;
-  text-align: left;
-  height: 30%;
-  width: 100%;
-} */
 
+}
+
+/*****************************
+ Toilet List 
+ *****************************/
 #toilet-list {
   width: 100%;
   height: 500px;
-  border: 1px solid white;
-
-  display: flex;
-  flex-direction: column;
-  /* justify-content: flex-start; */
-  align-items: left;
+  /* border: 1px solid white; */
   overflow: scroll;
+  border-right: 100px;
+  list-style-type: none;
+  padding: 0;
 }
 
 .toilet-item {
-  /*
-              flex-grow: 0;
-              flex-shrink: 0;
-              flex-basis: auto;
-             */
-  flex: 0 0 auto;
   width: 100%;
-  height: 35px;
-
-  border-bottom: 1px solid darkblue;
-  background-color: lightgrey;
+  /* border-bottom: 1px solid darkblue; */
+  /* background-color: lightgrey; */
   cursor: pointer;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  padding-left: 10px;
+  text-align: left;
+  padding-bottom: 8px;
 }
 
 .toilet-item:last-child {
@@ -193,4 +171,15 @@ body {
 
 .menu-icon {
   color: white;
+
+/*****************************
+ Review List 
+ *****************************/
+.review-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.info-window {
+  color: black;
 }
