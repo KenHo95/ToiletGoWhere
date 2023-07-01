@@ -22,7 +22,7 @@ const Map = (props) => {
   const [map, setMap] = useState();
   const [isOpen, setIsOpen] = useState(false);
   const [infoWindowData, setInfoWindowData] = useState();
-  const [showNearbyToilets, setShowNearbyToilets] = useState(true);
+  const [showNearbyToilets, setShowNearbyToilets] = useState(false);
 
   useEffect(() => {
     if (props.userLocation !== {} && props.toiletsData !== [])
@@ -35,7 +35,8 @@ const Map = (props) => {
   const onLoad = (map) => {
     setMap(map);
     const bounds = new window.google.maps.LatLngBounds();
-    props.nearbyToilets?.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
+    // props.nearbyToilets?.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
+    props.toiletsData?.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
     map.fitBounds(bounds);
   };
 
