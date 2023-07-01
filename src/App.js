@@ -25,7 +25,7 @@ function App() {
   const [user, setUser] = useState({ email: "" });
   const [toiletsData, setToiletsData] = useState([]);
   const [usersLikesData, setUsersLikesData] = useState({ 0: null });
-  const [userLocation, setUserLocation] = useState({});
+  const [userLocation, setUserLocation] = useState(null);
   const [nearbyToilets, setNearbyToilets] = useState([]);
   const [map, setMap] = useState();
   const [isOpen, setIsOpen] = useState(false);
@@ -77,10 +77,7 @@ function App() {
         return toilet.lat === nearestToilet.latitude;
       });
     });
-    // console.log(userLocation);
-    // console.log(toiletsData.slice(0, 5));
-    // console.log(nearestToilets.slice(0, 5));
-    // console.log(result);
+
     setNearbyToilets(result);
   };
 
@@ -95,6 +92,7 @@ function App() {
   // pan to toilet location on toilet list click
   const handleMarkerClick = (id, lat, lng, address) => {
     map?.panTo({ lat, lng });
+    map?.setZoom(18);
     setInfoWindowData({ id, address });
     setIsOpen(true);
   };
@@ -229,6 +227,7 @@ function App() {
                 userEmail={user.email}
                 toiletsToDisplay={toiletsToDisplay}
                 usersLikesData={usersLikesData}
+                handleMarkerClick={handleMarkerClick}
               />
             }
           />

@@ -75,6 +75,10 @@ const Map = (props) => {
             mapContainerClassName="map-container"
             onLoad={props.onLoad}
             onClick={() => props.setIsOpen(false)}
+            defaultCenter={{
+              lat: 1.34,
+              lng: 103.63681,
+            }}
           >
             {/* Toilet markers */}
             {props.toiletsToDisplay.map(
@@ -105,7 +109,7 @@ const Map = (props) => {
               )
             )}
             {/* User marker*/}
-            {props.nearbyToilets.length === 5 && (
+            {props.userLocation !== null && (
               <MarkerF
                 key="userLoc"
                 position={{

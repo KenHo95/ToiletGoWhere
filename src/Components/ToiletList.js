@@ -137,6 +137,7 @@ function ToiletList(props) {
               onClick={() => {
                 props.setselectedToilet(Ind);
                 props.setselectedToiletAddress(Address);
+                props.handleMarkerClick(Ind, lat, lng, Address);
                 navigate("/ReviewList"); // navigate to review list when clicked
               }}
             >
@@ -152,7 +153,7 @@ function ToiletList(props) {
     // display toilet list
 
     <div>
-      {console.log(props.usersLikesData)}{" "}
+      {/* {console.log(props.usersLikesData)}{" "} */}
       <ol id="toilet-list">{toiletsListItems}</ol>
       <br />
       <br />

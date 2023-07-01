@@ -36,6 +36,7 @@ function LikedToiletList(props) {
         usersLikesData={props.usersLikesData}
         urlId={id}
         userEmail={props.userEmail}
+        handleMarkerClick={props.handleMarkerClick}
       />
     </div>
   );
