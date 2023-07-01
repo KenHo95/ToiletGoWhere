@@ -150,13 +150,10 @@ function ToiletList(props) {
 
   return (
     // display toilet list
+
     <div>
-      <ol
-        id="toilet-list"
-        className={!props.showNearbyToilets ? "better_scrollbar" : null}
-      >
-        {toiletsListItems}
-      </ol>
+      {console.log(props.usersLikesData)}{" "}
+      <ol id="toilet-list">{toiletsListItems}</ol>
       <br />
       <br />
       <br />
