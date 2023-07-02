@@ -153,7 +153,7 @@ function ToiletList(props) {
     // display toilet list
 
     <div>
-      {/* {console.log(props.usersLikesData)}{" "} */}
+      {/* {console.log(props.usersLikesData)} */}
       <ol id="toilet-list">{toiletsListItems}</ol>
       <br />
       <br />

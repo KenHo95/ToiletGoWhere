@@ -20,6 +20,7 @@ const Map = (props) => {
   });
 
   useEffect(() => {
+    // Compute nearest toilets only when user location and toilet data are loaded
     if (props.userLocation !== {} && props.toiletsData !== [])
       props.findNearestToilets();
 
@@ -29,24 +30,21 @@ const Map = (props) => {
   // markers to set map bound to show whole of singapore
   const markers = [
     {
-      // address: "20 Tuas West Drive, S(638418)",
       lat: 1.34,
       lng: 103.63681,
     },
     {
-      // address: "60 Woodlands Industrial Park E4, S(757705)",
       lat: 1.448472,
       lng: 103.79445,
     },
     {
-      // address: "2 Changi Village Road, S(500002)",
       lat: 1.389152,
       lng: 103.988245,
     },
   ];
 
   useEffect(() => {
-    // to toggle map bound on show nearby button click
+    // toggle map bound on show nearby button click
     if (props.map) {
       let toiletsLocationBound = props.showNearbyToilets
         ? props.nearbyToilets
@@ -67,7 +65,7 @@ const Map = (props) => {
     <div>
       {/* {console.log(props.toiletsToDisplay)}{" "} */}
       <div className="Map">
-        {/* Show maps and toilet list display only on map and nearby toilets array loaded */}
+        {/* Show maps and toilet list display only on map and toilets data array loaded */}
         {!isLoaded || props.toiletsToDisplay.length === 0 ? (
           <h1>Loading...</h1>
         ) : (
@@ -75,10 +73,6 @@ const Map = (props) => {
             mapContainerClassName="map-container"
             onLoad={props.onLoad}
             onClick={() => props.setIsOpen(false)}
-            defaultCenter={{
-              lat: 1.34,
-              lng: 103.63681,
-            }}
           >
             {/* Toilet markers */}
             {props.toiletsToDisplay.map(
@@ -126,6 +120,7 @@ const Map = (props) => {
         )}
       </div>
       {/* Toggle btw nearby/ full toilets location display */}
+      {/* Render only when nearby toilets are computed */}
       {props.nearbyToilets.length === 5 && (
         <FormControl component="fieldset" variant="standard">
           <FormControlLabel
@@ -137,7 +132,6 @@ const Map = (props) => {
                     props.showNearbyToilets ? false : true
                   );
                   props.setIsOpen(false);
-                  // onMapChange();
                 }}
               />
             }
@@ -145,15 +139,6 @@ const Map = (props) => {
           />
         </FormControl>
       )}
-      {/* <ToiletList
-        toiletsToDisplay={toiletsToDisplay}
-        usersLikesData={props.usersLikesData}
-        setselectedToilet={props.setselectedToilet}
-        setselectedToiletAddress={props.setselectedToiletAddress}
-        userEmail={props.userEmail}
-        handleMarkerClick={handleMarkerClick}
-        showNearbyToilets={showNearbyToilets}
-      /> */}
     </div>
   );
 };

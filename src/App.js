@@ -92,7 +92,7 @@ function App() {
   // pan to toilet location on toilet list click
   const handleMarkerClick = (id, lat, lng, address) => {
     map?.panTo({ lat, lng });
-    map?.setZoom(18);
+    map?.setZoom(12);
     setInfoWindowData({ id, address });
     setIsOpen(true);
   };
