@@ -25,7 +25,7 @@ const Map = (props) => {
       props.findNearestToilets();
 
     return () => {};
-  }, [props.userLocation]);
+  }, [props.userLocation, props.toiletsData]);
 
   // markers to set map bound to show whole of singapore
   const markers = [
