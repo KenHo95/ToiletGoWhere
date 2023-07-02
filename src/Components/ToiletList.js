@@ -83,21 +83,21 @@ function ToiletList(props) {
 
   // create toilet list from toilet data
   let toiletsListItems = props.toiletsToDisplay.map(
-    ({ Address, Area, Name, Type, lat, lng }, Ind) => (
+    ({ Address, Area, Name, Type, id, lat, lng }) => (
       <div>
         {/* Switch between main and liked toilet list */}
         {(props.urlId === "LikedToiletList"
-          ? props.likedToiletData[Ind] // render if user toilet like is true, else dont render
+          ? props.usersLikesData[id] // render if user toilet like is true, else dont render
           : true) && (
-          <li className={"toilet-item"} key={Ind}>
+          <li className={"toilet-item"} key={id}>
             {/* like button
              */}
             <StyledRating
               name="customized-color"
-              defaultValue={props.usersLikesData[Ind] ? 1 : 0}
+              defaultValue={props.usersLikesData[id] ? 1 : 0}
               max={1}
               onChange={(event, newValue) => {
-                handleLikeButtonClick(Ind, newValue);
+                handleLikeButtonClick(id, newValue);
               }}
               icon={<FavoriteIcon fontSize="inherit" />}
               emptyIcon={
@@ -109,12 +109,12 @@ function ToiletList(props) {
             <Button
               variant="contained"
               onClick={() => {
-                props.handleMarkerClick(Ind, lat, lng, Address);
+                props.handleMarkerClick(id, lat, lng, Address);
               }}
             >
               {Address + " "}
-              {!isNaN(getAvgRatings(Ind)) && (
-                <Rating name="read-only" value={getAvgRatings(Ind)} readOnly />
+              {!isNaN(getAvgRatings(id)) && (
+                <Rating name="read-only" value={getAvgRatings(id)} readOnly />
               )}
             </Button>{" "}
             {/* direction button
@@ -135,9 +135,9 @@ function ToiletList(props) {
               color="primary"
               aria-label="add"
               onClick={() => {
-                props.setselectedToilet(Ind);
+                props.setselectedToilet(id);
                 props.setselectedToiletAddress(Address);
-                props.handleMarkerClick(Ind, lat, lng, Address);
+                props.handleMarkerClick(id, lat, lng, Address);
                 navigate("/ReviewList"); // navigate to review list when clicked
               }}
             >
@@ -153,7 +153,10 @@ function ToiletList(props) {
     // display toilet list
 
     <div>
-      {/* {console.log(props.usersLikesData)} */}
+      {/* {console.log("props.toiletsToDisplay")}
+      {console.log(props.toiletsToDisplay)}
+      {console.log("props.usersLikesData")}
+      {console.log(props.usersLikesData)} */}
       <ol id="toilet-list">{toiletsListItems}</ol>
       <br />
       <br />

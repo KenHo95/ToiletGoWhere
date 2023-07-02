@@ -25,7 +25,7 @@ function App() {
   const [user, setUser] = useState({ email: "" });
   const [toiletsData, setToiletsData] = useState([]);
   const [usersLikesData, setUsersLikesData] = useState({ 0: null });
-  const [userLocation, setUserLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState({ lat: 0, lng: 0 });
   const [nearbyToilets, setNearbyToilets] = useState([]);
   const [map, setMap] = useState();
   const [isOpen, setIsOpen] = useState(false);
@@ -71,8 +71,15 @@ function App() {
       coordsArray.push({ latitude: toilet.lat, longitude: toilet.lng })
     );
 
+    // add ID info to determine liked toilets
+    let toiletsDataWithID = toiletsData.map((toilet, index) => ({
+      ...toilet,
+      id: index,
+    }));
+
+    // get five nearest toilets to user location
     let nearestToilets = orderByDistance(userLocation, coordsArray).slice(0, 5);
-    let result = toiletsData.filter((toilet) => {
+    let result = toiletsDataWithID.filter((toilet) => {
       return nearestToilets.some((nearestToilet) => {
         return toilet.lat === nearestToilet.latitude;
       });
@@ -81,7 +88,7 @@ function App() {
     setNearbyToilets(result);
   };
 
-  // set default map display to toilets that are near user's location
+  // set on load map display to all toilets location
   const onLoad = (map) => {
     setMap(map);
     const bounds = new window.google.maps.LatLngBounds();
@@ -106,6 +113,7 @@ function App() {
     // user.email &&
     onChildAdded(ToiletsDataRef, (data) => {
       console.log("ToiletsDataRef");
+
       setToiletsData((prev) => [...prev, data.val()]);
     });
 
@@ -128,17 +136,20 @@ function App() {
     return () => {};
   }, [user.email]);
 
+  // add ID info to determine liked toilets
+  let toiletsDataWithID = toiletsData.map((toilet, index) => ({
+    ...toilet,
+    id: index,
+  }));
+
   // toggle btw full and nearby toilets display
-  let toiletsToDisplay = showNearbyToilets ? nearbyToilets : toiletsData;
+  let toiletsToDisplay = showNearbyToilets ? nearbyToilets : toiletsDataWithID;
 
   return (
-    // <>
-    //   <CssBaseline />
-    //   <Header />
-
     <div className="App">
       {/* {(userLocation !== {} && toiletsData !== [] && )findNearestToilets()} */}
       {/* {console.log(toiletsData)} */}
+
       <header className="App-header">
         <h1>ToiletGoWhere</h1>
         <div>
