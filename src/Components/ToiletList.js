@@ -135,10 +135,8 @@ function ToiletList(props) {
               color="primary"
               aria-label="add"
               onClick={() => {
-                props.setselectedToilet(id);
-                props.setselectedToiletAddress(Address);
                 props.handleMarkerClick(id, lat, lng, Address);
-                navigate("/ReviewList"); // navigate to review list when clicked
+                navigate(`/ReviewList/${id}`); // navigate to review list when clicked
               }}
             >
               <ReviewsIcon sx={{ mr: 0 }} />

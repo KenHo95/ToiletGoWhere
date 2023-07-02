@@ -2,7 +2,6 @@ import "./App.css";
 import { React, useState, useEffect } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 
-import UploadReview from "./Components/UploadReview";
 import Map from "./Components/Map";
 import AuthForm from "./Components/AuthForm";
 import { auth } from "./firebase";
@@ -20,8 +19,6 @@ const DB_APPDATA_KEY = "AppData";
 
 function App() {
   // initialise initial states and set states
-  const [selectedToilet, setselectedToilet] = useState(null);
-  const [selectedToiletAddress, setselectedToiletAddress] = useState(null);
   const [user, setUser] = useState({ email: "" });
   const [toiletsData, setToiletsData] = useState([]);
   const [usersLikesData, setUsersLikesData] = useState({ 0: null });
@@ -99,7 +96,7 @@ function App() {
   // pan to toilet location on toilet list click
   const handleMarkerClick = (id, lat, lng, address) => {
     map?.panTo({ lat, lng });
-    map?.setZoom(12);
+    map?.setZoom(14);
     setInfoWindowData({ id, address });
     setIsOpen(true);
   };
@@ -110,6 +107,8 @@ function App() {
         setUser(user);
       }
     });
+
+    // get toilets data
     // user.email &&
     onChildAdded(ToiletsDataRef, (data) => {
       console.log("ToiletsDataRef");
@@ -123,12 +122,12 @@ function App() {
   }, []);
 
   useEffect(() => {
+    // get userlikes data
     user.email &&
       onChildAdded(UsersLikesRef, (data) => {
         console.log("UsersLike added");
 
         setUsersLikesData((prev) => ({
-          // get userlikes data
           ...prev,
           [data.key]: data.val(),
         }));
@@ -142,7 +141,7 @@ function App() {
     id: index,
   }));
 
-  // toggle btw full and nearby toilets display
+  // toggle between full and nearby toilets display
   let toiletsToDisplay = showNearbyToilets ? nearbyToilets : toiletsDataWithID;
 
   return (
@@ -174,13 +173,9 @@ function App() {
         </div>
         <br />
 
+        {/* Map */}
         <Map
           toiletsData={toiletsData}
-          usersLikesData={usersLikesData}
-          selectedToilet={selectedToilet}
-          setselectedToilet={setselectedToilet}
-          setselectedToiletAddress={setselectedToiletAddress}
-          userEmail={user.email}
           findNearestToilets={findNearestToilets}
           userLocation={userLocation}
           nearbyToilets={nearbyToilets}
@@ -203,33 +198,23 @@ function App() {
         <Link to="/SearchToilets">Search</Link>
         <br />
 
+        {/* ToiletList */}
         <Routes>
-          {/* Map */}
           <Route
             path="/"
             element={
               <ToiletList
                 toiletsToDisplay={toiletsToDisplay}
                 usersLikesData={usersLikesData}
-                setselectedToilet={setselectedToilet}
-                setselectedToiletAddress={setselectedToiletAddress}
                 userEmail={user.email}
                 handleMarkerClick={handleMarkerClick}
                 showNearbyToilets={showNearbyToilets}
               />
             }
           />
-          {/* UploadReview */}
-          <Route path="/UploadReview" element={<UploadReview />} />
-          <Route
-            path="/ReviewList"
-            element={
-              <ReviewList
-                selectedToilet={selectedToilet}
-                selectedToiletAddress={selectedToiletAddress}
-              />
-            }
-          />
+          {/* Review */}
+          <Route path={"/ReviewList/:id"} element={<ReviewList />} />
+
           {/* LikedToiletList */}
           <Route
             path="/:id"

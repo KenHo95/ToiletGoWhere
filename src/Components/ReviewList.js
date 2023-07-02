@@ -1,20 +1,28 @@
 import { React, useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { realTimeDatabase } from "../firebase";
-import { ref as realTimeDatabaseRef, onChildAdded } from "firebase/database";
+import {
+  ref as realTimeDatabaseRef,
+  onChildAdded,
+  get,
+} from "firebase/database";
 
 // styling for toilet button
 import Rating from "@mui/material/Rating";
 import UploadReview from "./UploadReview";
 
+const DB_TOILETDATA_KEY = "ToiletData";
 const DB_TOILET_REVIEWLIST_KEY = "AppData/Reviews";
 
 function ReviewList(props) {
   // initialise initial states and set states
+  const [selectToiletAddress, setSelectToiletAddress] = useState([]);
   const [toiletReviewsData, setToiletReviewsData] = useState([]);
+  let { id } = useParams(); // get selected toilet from url params as this persist after user refreshes page
 
   const toiletReviewsRef = realTimeDatabaseRef(
     realTimeDatabase,
-    DB_TOILET_REVIEWLIST_KEY + `/${props.selectedToilet}/`
+    DB_TOILET_REVIEWLIST_KEY + `/${id}/`
   );
 
   useEffect(() => {
@@ -27,8 +35,25 @@ function ReviewList(props) {
       ]);
     });
 
+    get(selectToiletAddressRef)
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          setSelectToiletAddress(snapshot.val());
+        } else {
+          console.log("No data available");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
     return () => {};
   }, []);
+
+  const selectToiletAddressRef = realTimeDatabaseRef(
+    realTimeDatabase,
+    DB_TOILETDATA_KEY + `/${id}/Address`
+  );
 
   let reviewListItems = toiletReviewsData.map((review) => (
     <li key={review.key}>
@@ -49,8 +74,8 @@ function ReviewList(props) {
 
   return (
     <div>
-      <h1>{props.selectedToiletAddress}</h1>
-      <UploadReview selectedToilet={props.selectedToilet} />
+      <h1>{selectToiletAddress}</h1>
+      <UploadReview selectedToilet={id} />
       <h1>Reviews</h1>
       <ul className={"review-list"}>{reviewListItems}</ul>
     </div>

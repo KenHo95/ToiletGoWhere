@@ -103,7 +103,7 @@ const Map = (props) => {
               )
             )}
             {/* User marker*/}
-            {props.userLocation !== null && (
+            {props.nearbyToilets.length === 5 && (
               <MarkerF
                 key="userLoc"
                 position={{
