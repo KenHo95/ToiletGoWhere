@@ -28,6 +28,7 @@ function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [infoWindowData, setInfoWindowData] = useState();
   const [showNearbyToilets, setShowNearbyToilets] = useState(false);
+  const [toiletRatingsData, setToiletRatingsData] = useState([]);
 
   const ToiletsDataRef = realTimeDatabaseRef(
     realTimeDatabase,
@@ -135,6 +136,33 @@ function App() {
     return () => {};
   }, [user.email]);
 
+  const ToiletRatingsRef = realTimeDatabaseRef(
+    realTimeDatabase,
+    DB_APPDATA_KEY + "/Ratings/"
+  );
+
+  useEffect(() => {
+    user.email &&
+      onChildAdded(ToiletRatingsRef, (data) => {
+        console.log("ToiletRatings added");
+
+        setToiletRatingsData((prev) => ({ ...prev, [data.key]: data.val() })); // get toilet ratings data
+      });
+
+    return () => {};
+  }, [user.email]); // call useEffect twice to account for initial undefined useremail
+
+  const getAvgRatings = (toiletId) => {
+    let sumRatings = 0,
+      count = 0;
+
+    for (var key in toiletRatingsData[toiletId]) {
+      sumRatings += toiletRatingsData[toiletId][key];
+      count++;
+    }
+    return sumRatings / count;
+  };
+
   // add ID info to determine liked toilets
   let toiletsDataWithID = toiletsData.map((toilet, index) => ({
     ...toilet,
@@ -148,7 +176,6 @@ function App() {
     <div className="App">
       {/* {(userLocation !== {} && toiletsData !== [] && )findNearestToilets()} */}
       {/* {console.log(toiletsData)} */}
-
       <header className="App-header">
         <h1>ToiletGoWhere</h1>
         <div>
@@ -190,6 +217,7 @@ function App() {
           onLoad={onLoad}
           handleMarkerClick={handleMarkerClick}
           toiletsToDisplay={toiletsToDisplay}
+          getAvgRatings={getAvgRatings}
         />
 
         {/* Links */}
@@ -209,6 +237,7 @@ function App() {
                 userEmail={user.email}
                 handleMarkerClick={handleMarkerClick}
                 showNearbyToilets={showNearbyToilets}
+                getAvgRatings={getAvgRatings}
               />
             }
           />
@@ -224,6 +253,7 @@ function App() {
                 toiletsToDisplay={toiletsToDisplay}
                 usersLikesData={usersLikesData}
                 handleMarkerClick={handleMarkerClick}
+                getAvgRatings={getAvgRatings}
               />
             }
           />

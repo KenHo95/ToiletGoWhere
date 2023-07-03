@@ -25,7 +25,14 @@ function ReviewList(props) {
     DB_TOILET_REVIEWLIST_KEY + `/${id}/`
   );
 
+  const selectToiletAddressRef = realTimeDatabaseRef(
+    realTimeDatabase,
+    DB_TOILETDATA_KEY + `/${id}/Address`
+  );
+
   useEffect(() => {
+    setToiletReviewsData([]); // clear prev review data as user selects a new toilet
+
     onChildAdded(toiletReviewsRef, (data) => {
       console.log("toiletReviewsData added");
 
@@ -48,12 +55,7 @@ function ReviewList(props) {
       });
 
     return () => {};
-  }, []);
-
-  const selectToiletAddressRef = realTimeDatabaseRef(
-    realTimeDatabase,
-    DB_TOILETDATA_KEY + `/${id}/Address`
-  );
+  }, [id]);
 
   let reviewListItems = toiletReviewsData.map((review) => (
     <li key={review.key}>
