@@ -51,7 +51,7 @@ const Map = (props) => {
         : markers;
 
       const bounds = new window.google.maps.LatLngBounds();
-      toiletsLocationBound.map((marker) => {
+      toiletsLocationBound.forEach((marker) => {
         bounds.extend({
           lat: marker.lat,
           lng: marker.lng,
