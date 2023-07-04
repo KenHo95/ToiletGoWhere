@@ -23,7 +23,6 @@ const Map = (props) => {
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-    libraries: ["places"],
   });
 
   useEffect(() => {
@@ -158,10 +157,9 @@ const Map = (props) => {
               <Switch
                 checked={props.showNearbyToilets}
                 onChange={(e) => {
-                  // props.setShowNearbyToilets(
-                  //   props.showNearbyToilets ? false : true
-                  // );
-                  props.setShowNearbyToilets(!props.showNearbyToilets);
+                  props.setShowNearbyToilets(
+                    props.showNearbyToilets ? false : true
+                  );
                   props.setIsOpen(false);
                 }}
               />
