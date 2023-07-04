@@ -35,7 +35,6 @@ const DB_APPDATA_KEY = "AppData";
 
 //
 function ToiletList(props) {
-  const [toiletRatingsData, setToiletRatingsData] = useState([]);
   const navigate = useNavigate();
 
   // set relevant refs
@@ -43,22 +42,6 @@ function ToiletList(props) {
     realTimeDatabase,
     DB_APPDATA_KEY + `/LikedToilets/${props.userEmail.split(".")[0]}/` // format userEmail to firebase acceptable format
   );
-
-  const ToiletRatingsRef = realTimeDatabaseRef(
-    realTimeDatabase,
-    DB_APPDATA_KEY + "/Ratings/"
-  );
-
-  useEffect(() => {
-    props.userEmail &&
-      onChildAdded(ToiletRatingsRef, (data) => {
-        console.log("ToiletRatings added");
-
-        setToiletRatingsData((prev) => [...prev, data.val()]); // get toilet ratings data
-      });
-
-    return () => {};
-  }, [props.userEmail]); // call useEffect twice to account for initial undefined useremail
 
   const handleLikeButtonClick = (toiletID, isLiked) => {
     // update data to firebase at toiletID ref (computed property name)
@@ -68,17 +51,6 @@ function ToiletList(props) {
     });
 
     delete props.usersLikesData[toiletID]; // update user's like data locally
-  };
-
-  const getAvgRatings = (toiletId) => {
-    let sumRatings = 0,
-      count = 0;
-
-    for (var key in toiletRatingsData[toiletId]) {
-      sumRatings += toiletRatingsData[toiletId][key];
-      count++;
-    }
-    return sumRatings / count;
   };
 
   // create toilet list from toilet data
@@ -110,26 +82,31 @@ function ToiletList(props) {
               variant="contained"
               onClick={() => {
                 props.handleMarkerClick(id, lat, lng, Address);
+                // console.log(props.getAvgRatings(id));
               }}
             >
               {Address + " "}
-              {!isNaN(getAvgRatings(id)) && (
-                <Rating name="read-only" value={getAvgRatings(id)} readOnly />
+              {!isNaN(props.getAvgRatings(id)) && (
+                <Rating
+                  name="read-only"
+                  value={props.getAvgRatings(id)}
+                  readOnly
+                />
               )}
             </Button>{" "}
             {/* direction button
              */}
-            <Fab
+            {/* <Fab
               variant="extended"
               size="small"
               color="primary"
               aria-label="add"
             >
               <NavigationIcon sx={{ mr: 0 }} />
-            </Fab>{" "}
+            </Fab>{" "} */}
             {/* Show toilet reviews button
              */}
-            <Fab
+            {/* <Fab
               variant="extended"
               size="small"
               color="primary"
@@ -137,10 +114,11 @@ function ToiletList(props) {
               onClick={() => {
                 props.handleMarkerClick(id, lat, lng, Address);
                 navigate(`/ReviewList/${id}`); // navigate to review list when clicked
+                console.log(id);
               }}
             >
               <ReviewsIcon sx={{ mr: 0 }} />
-            </Fab>
+            </Fab> */}
           </li>
         )}
       </div>
@@ -152,8 +130,8 @@ function ToiletList(props) {
 
     <div>
       {/* {console.log("props.toiletsToDisplay")}
-      {console.log(props.toiletsToDisplay)}
-      {console.log("props.usersLikesData")}
+      {console.log(props.toiletsToDisplay)} */}
+      {/* {console.log("props.usersLikesData")}
       {console.log(props.usersLikesData)} */}
       <ol id="toilet-list">{toiletsListItems}</ol>
       <br />

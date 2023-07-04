@@ -13,6 +13,7 @@ function LikedToiletList(props) {
         urlId={id}
         userEmail={props.userEmail}
         handleMarkerClick={props.handleMarkerClick}
+        getAvgRatings={props.getAvgRatings}
       />
     </div>
   );

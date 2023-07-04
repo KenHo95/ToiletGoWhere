@@ -6,15 +6,21 @@ import {
 } from "@react-google-maps/api";
 import "../App.css";
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import toiletIcon from "../toileticon.png";
 import userIcon from "../userIcon.png";
 
+import Rating from "@mui/material/Rating";
 import Switch from "@mui/material/Switch";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import Fab from "@mui/material/Fab";
+import ReviewsIcon from "@mui/icons-material/Reviews";
 
 const Map = (props) => {
+  const navigate = useNavigate();
+
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     libraries: ["places"],
@@ -77,27 +83,50 @@ const Map = (props) => {
           >
             {/* Toilet markers */}
             {props.toiletsToDisplay.map(
-              ({ Address, Area, Name, Type, lat, lng }, Ind) => (
+              ({ Address, Area, Name, Type, id, lat, lng }) => (
                 <MarkerF
-                  key={Ind}
+                  key={id}
                   position={{ lat, lng }}
                   icon={{
                     url: toiletIcon,
                     scaledSize: new window.google.maps.Size(50, 50),
                   }}
                   onClick={() => {
-                    props.handleMarkerClick(Ind, lat, lng, Address);
+                    props.handleMarkerClick(id, lat, lng, Address);
                   }}
                 >
-                  {props.isOpen && props.infoWindowData?.id === Ind && (
+                  {props.isOpen && props.infoWindowData?.id === id && (
                     <InfoWindow
                       onCloseClick={() => {
                         props.setIsOpen(false);
                       }}
                     >
-                      <h3 className="info-window">
-                        {props.infoWindowData.address}
-                      </h3>
+                      <div className="info-window">
+                        <h3>{props.infoWindowData.address}</h3>
+                        {!isNaN(props.getAvgRatings(id)) ? (
+                          <Rating
+                            name="read-only"
+                            value={props.getAvgRatings(id)}
+                            readOnly
+                          />
+                        ) : (
+                          <h3>No ratings yet..</h3>
+                        )}
+                        <h3>
+                          See Reviews{" "}
+                          <Fab
+                            variant="extended"
+                            size="small"
+                            color="primary"
+                            aria-label="add"
+                            onClick={() => {
+                              navigate(`/ReviewList/${id}`); // navigate to review list when clicked
+                            }}
+                          >
+                            <ReviewsIcon sx={{ mr: 0 }} />
+                          </Fab>
+                        </h3>
+                      </div>
                     </InfoWindow>
                   )}
                 </MarkerF>
