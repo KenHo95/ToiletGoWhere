@@ -1,6 +1,6 @@
 import "./App.css";
 import { React, useState, useEffect } from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, useLocation } from "react-router-dom";
 
 import Map from "./Components/Map";
 import AuthForm from "./Components/AuthForm";
@@ -8,11 +8,13 @@ import { auth } from "./firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { realTimeDatabase } from "./firebase";
 import { onChildAdded, ref as realTimeDatabaseRef } from "firebase/database";
+import SearchBar from "./Components/SearchBar";
 
 import ToiletList from "./Components/ToiletList";
 import ReviewList from "./Components/ReviewList";
 import LikedToiletList from "./Components/LikedToiletList";
 import { orderByDistance } from "geolib";
+import Button from "@mui/material/Button";
 
 const DB_TOILETDATA_KEY = "ToiletData";
 const DB_APPDATA_KEY = "AppData";
@@ -28,6 +30,9 @@ function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [infoWindowData, setInfoWindowData] = useState();
   const [showNearbyToilets, setShowNearbyToilets] = useState(false);
+  const [showAuthForm, setShowAuthForm] = useState(false);
+  const [showSignInContent, setShowSignInContent] = useState(true);
+  const location = useLocation();
 
   const ToiletsDataRef = realTimeDatabaseRef(
     realTimeDatabase,
@@ -104,7 +109,7 @@ function App() {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUser(user);
+        setUser({ email: user.email });
       }
     });
 
@@ -144,6 +149,14 @@ function App() {
   // toggle between full and nearby toilets display
   let toiletsToDisplay = showNearbyToilets ? nearbyToilets : toiletsDataWithID;
 
+  useEffect(() => {
+    if (location.pathname === "/") {
+      // Reset the state when user navigates to the homepage
+      setShowAuthForm(false);
+      setShowSignInContent(true);
+    }
+  }, [location]);
+
   return (
     <div className="App">
       {/* {(userLocation !== {} && toiletsData !== [] && )findNearestToilets()} */}
@@ -151,8 +164,8 @@ function App() {
 
       <header className="App-header">
         <h1>ToiletGoWhere</h1>
-        <div>
-          {/* Auth Form / Welcome Messsage*/}
+        {/* <div>
+          Auth Form / Welcome Messsage
           {user.email ? (
             <div>
               <h2>Welcome back {user.email}!</h2>
@@ -161,7 +174,7 @@ function App() {
                   signOut(auth);
                   setUser({ email: "" });
                   // eslint-disable-next-line no-restricted-globals
-                  location.reload(); // to refresh user linked states
+                  window.location.reload(); // to refresh user linked states
                 }}
               >
                 Logout!
@@ -170,7 +183,7 @@ function App() {
           ) : (
             <AuthForm />
           )}
-        </div>
+        </div> */}
         <br />
 
         {/* Map */}
@@ -190,6 +203,7 @@ function App() {
           onLoad={onLoad}
           handleMarkerClick={handleMarkerClick}
           toiletsToDisplay={toiletsToDisplay}
+          userLoggedIn={user.email !== ""}
         />
 
         {/* Links */}
@@ -215,16 +229,50 @@ function App() {
           {/* Review */}
           <Route path={"/ReviewList/:id"} element={<ReviewList />} />
 
+          <Route path="/SearchToilets" element={<SearchBar />} />
+
           {/* LikedToiletList */}
           <Route
             path="/:id"
             element={
-              <LikedToiletList
-                userEmail={user.email}
-                toiletsToDisplay={toiletsToDisplay}
-                usersLikesData={usersLikesData}
-                handleMarkerClick={handleMarkerClick}
-              />
+              user.email !== "" ? (
+                <div>
+                  <LikedToiletList
+                    userEmail={user.email}
+                    toiletsToDisplay={toiletsToDisplay}
+                    usersLikesData={usersLikesData}
+                    handleMarkerClick={handleMarkerClick}
+                  />{" "}
+                  <button
+                    onClick={(e) => {
+                      signOut(auth);
+                      setUser({ email: "" });
+                      // eslint-disable-next-line no-restricted-globals
+                      window.location.reload(); // to refresh user linked states
+                    }}
+                  >
+                    Logout!
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  {showSignInContent && (
+                    <div>
+                      <p>Sign in to search/save your favorite toilet!</p>
+                      <Button
+                        variant="contained"
+                        onClick={() => {
+                          setShowAuthForm(true);
+                          setShowSignInContent(false);
+                        }}
+                      >
+                        Sign In Here
+                      </Button>
+                    </div>
+                  )}
+                  {showAuthForm && <AuthForm />}
+                </div>
+              )
             }
           />
         </Routes>

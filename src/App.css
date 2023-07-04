@@ -148,7 +148,7 @@ body {
 .better_scrollbar::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
-  background-color: lightgrey;
+  background-color: rgb(22, 20, 20);
 }
 
 .better_scrollbar::-webkit-scrollbar-thumb {
