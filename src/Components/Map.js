@@ -128,9 +128,7 @@ const Map = (props) => {
               <Switch
                 checked={props.showNearbyToilets}
                 onChange={(e) => {
-                  props.setShowNearbyToilets(
-                    props.showNearbyToilets ? false : true
-                  );
+                  props.setShowNearbyToilets(!props.showNearbyToilets);
                   props.setIsOpen(false);
                 }}
               />
