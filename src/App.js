@@ -47,6 +47,11 @@ function App() {
     DB_TOILETDATA_KEY
   );
 
+  const ToiletRatingsRef = realTimeDatabaseRef(
+    realTimeDatabase,
+    DB_APPDATA_KEY + "/Ratings/"
+  );
+
   useEffect(() => {
     // set user data after login
     onAuthStateChanged(auth, (user) => {
@@ -62,6 +67,14 @@ function App() {
       setToiletsData((prev) => [...prev, data.val()]);
     });
 
+    // get toilet ratings data
+    // user.email &&
+    onChildAdded(ToiletRatingsRef, (data) => {
+      console.log("ToiletRatings added");
+
+      setToiletRatingsData((prev) => ({ ...prev, [data.key]: data.val() }));
+    });
+
     // get User Location
     getUserLocation();
 
@@ -71,11 +84,6 @@ function App() {
   const UsersLikesRef = realTimeDatabaseRef(
     realTimeDatabase,
     DB_APPDATA_KEY + `/LikedToilets/${user.email.split(".")[0]}/` // format userEmail to firebase acceptable format
-  );
-
-  const ToiletRatingsRef = realTimeDatabaseRef(
-    realTimeDatabase,
-    DB_APPDATA_KEY + "/Ratings/"
   );
 
   useEffect(() => {
@@ -90,15 +98,8 @@ function App() {
         }));
       });
 
-    // get toilet ratings data
-    user.email &&
-      onChildAdded(ToiletRatingsRef, (data) => {
-        console.log("ToiletRatings added");
-
-        setToiletRatingsData((prev) => ({ ...prev, [data.key]: data.val() }));
-      });
     return () => {};
-  }, [user.email]); // call useEffect twice to account for initial undefined useremail
+  }, [user.email]); // call useEffect when user login
 
   /////////////////////////////////////
   // Functions to get user location //
@@ -195,7 +196,7 @@ function App() {
   return (
     <div className="App">
       {/* {(userLocation !== {} && toiletsData !== [] && )findNearestToilets()} */}
-      {/* {console.log(toiletsData)} */}
+      {/* {console.log(toiletRatingsData)} */}
       <header className="App-header">
         <h1>ToiletGoWhere</h1>
         <div>
@@ -238,6 +239,7 @@ function App() {
           handleMarkerClick={handleMarkerClick}
           toiletsToDisplay={toiletsToDisplay}
           getAvgRatings={getAvgRatings}
+          getUserLocation={getUserLocation}
         />
         <br />
 

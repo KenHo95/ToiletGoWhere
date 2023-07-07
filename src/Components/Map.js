@@ -16,6 +16,8 @@ import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Fab from "@mui/material/Fab";
 import ReviewsIcon from "@mui/icons-material/Reviews";
+import PlaceIcon from "@mui/icons-material/Place";
+import Button from "@mui/material/Button";
 
 const Map = (props) => {
   const navigate = useNavigate();
@@ -166,6 +168,15 @@ const Map = (props) => {
           />
         </FormControl>
       )}
+      <Button
+        color="secondary"
+        aria-label="add an alarm"
+        sx={{ "border-radius": "8px" }}
+        onClick={props.getUserLocation}
+        size="large"
+      >
+        <PlaceIcon /> reset
+      </Button>
     </div>
   );
 };
