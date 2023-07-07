@@ -8,8 +8,8 @@ import "../App.css";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import toiletIcon from "../toileticon.png";
-import userIcon from "../userIcon.png";
+import toiletIcon from "../Assets/toileticon.png";
+import userIcon from "../Assets/userIcon.png";
 import Rating from "@mui/material/Rating";
 import Switch from "@mui/material/Switch";
 import FormControl from "@mui/material/FormControl";

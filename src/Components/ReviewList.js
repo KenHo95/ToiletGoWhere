@@ -7,9 +7,17 @@ import {
   get,
 } from "firebase/database";
 
-// styling for toilet button
 import Rating from "@mui/material/Rating";
 import UploadReview from "./UploadReview";
+
+import { Grid } from "@mui/material";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import { CardActionArea } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
 
 const DB_TOILETDATA_KEY = "ToiletData";
 const DB_TOILET_REVIEWLIST_KEY = "AppData/Reviews";
@@ -57,21 +65,50 @@ function ReviewList(props) {
     return () => {};
   }, [id]);
 
+  const noImagePic =
+    "https://firebasestorage.googleapis.com/v0/b/toiletgowhere-c70c8.appspot.com/o/assets%2Fno-img.jpg?alt=media&token=0f9455a0-ad71-4215-b408-82c7882e44ad";
+
   // List of reviews with date, user email, rating, review text, photo information
   let reviewListItems = toiletReviewsData.map((review) => (
-    <li key={review.key}>
-      <p>Date: {review.val.date}</p>
-      <p>User: {review.val.email}</p>
-      <Rating name="read-only" value={review.val.rating} readOnly />
-      <p>Review: {review.val.review}</p>
-      {review.val.uploadURL !== "" && (
-        <img
-          style={{ width: 100, height: 100 }}
-          src={review.val.uploadURL}
-          alt="img"
+    <Card
+      key={review.key}
+      sx={{
+        maxWidth: 300,
+        minWidth: 300,
+        maxHeigth: 300,
+        minHeigth: 300,
+        bgcolor: "darkgrey",
+        textAlign: "left",
+        transition: "1s",
+        margin: "3px",
+      }}
+    >
+      <CardActionArea>
+        {console.log(review.val.uploadURL)}
+        <CardMedia
+          component="img"
+          image={
+            review.val.uploadURL !== "" ? review.val.uploadURL : noImagePic
+          }
+          alt="Toilet Photo"
         />
-      )}
-    </li>
+        <CardContent>
+          <Rating name="read-only" value={review.val.rating} readOnly />
+          <Typography gutterBottom variant="h5" component="div">
+            {review.val.review}
+          </Typography>
+        </CardContent>
+        <CardHeader
+          avatar={
+            <Avatar sx={{ bgcolor: "lightblue" }} aria-label="review">
+              {review.val.email[0].toUpperCase()}
+            </Avatar>
+          }
+          title={review.val.email}
+          subheader={review.val.date}
+        />
+      </CardActionArea>
+    </Card>
   ));
 
   return (
@@ -79,7 +116,14 @@ function ReviewList(props) {
       <h2>{selectToiletAddress}</h2>
       <UploadReview selectedToilet={id} />
       <h3>Reviews</h3>
-      <ul className={"review-list"}>{reviewListItems}</ul>
+      <Grid
+        className="Review-list-container"
+        container
+        spacing={1}
+        justifyContent="center"
+      >
+        {reviewListItems}
+      </Grid>
     </div>
   );
 }

@@ -36,8 +36,9 @@ label {
 }
 
 .uploadPhoto {
-  width: 400px;
-  height: 400px;
+  width: 300px;
+  height: 300px;
+  margin-bottom: 20px;
 }
 
 html {
@@ -135,7 +136,7 @@ body {
  Review List 
  *****************************/
 .Review-list-container {
-  margin-bottom: 60px;
+  margin-bottom: 40px;
 }
 
 .review-list {
@@ -147,6 +148,9 @@ body {
   color: black;
 }
 
+/*****************************
+ UploadReview 
+ *****************************/
 .Review-Container {
   margin-bottom: 100px;
 }
