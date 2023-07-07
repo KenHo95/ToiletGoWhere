@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 
 import toiletIcon from "../toileticon.png";
 import userIcon from "../userIcon.png";
-
 import Rating from "@mui/material/Rating";
 import Switch from "@mui/material/Switch";
 import FormControl from "@mui/material/FormControl";
@@ -20,7 +19,6 @@ import ReviewsIcon from "@mui/icons-material/Reviews";
 
 const Map = (props) => {
   const navigate = useNavigate();
-
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
@@ -31,7 +29,7 @@ const Map = (props) => {
       props.findNearestToilets();
 
     return () => {};
-  }, [props.userLocation, props.toiletsData]);
+  }, [props.userLocation, props.toiletsData]); // runs on either change to ensure nearest toilets is populated
 
   // markers to set map bound to show whole of singapore
   const markers = [

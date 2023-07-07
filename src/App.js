@@ -1,6 +1,6 @@
 import "./App.css";
 import { React, useState, useEffect } from "react";
-import { Routes, Route, Link, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 
 import Map from "./Components/Map";
 import AuthForm from "./Components/AuthForm";
@@ -39,16 +39,70 @@ function App() {
   const [toiletRatingsData, setToiletRatingsData] = useState([]);
   const [buttonClickedValue, setbuttonClickedValue] = useState(1);
 
+  //////////////////////////////////////////
+  // Functions to get data from firebase //
+  /////////////////////////////////////////
   const ToiletsDataRef = realTimeDatabaseRef(
     realTimeDatabase,
     DB_TOILETDATA_KEY
   );
+
+  useEffect(() => {
+    // set user data after login
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+      }
+    });
+
+    // get toilets data
+    onChildAdded(ToiletsDataRef, (data) => {
+      console.log("ToiletsDataRef");
+
+      setToiletsData((prev) => [...prev, data.val()]);
+    });
+
+    // get User Location
+    getUserLocation();
+
+    return () => {};
+  }, []);
 
   const UsersLikesRef = realTimeDatabaseRef(
     realTimeDatabase,
     DB_APPDATA_KEY + `/LikedToilets/${user.email.split(".")[0]}/` // format userEmail to firebase acceptable format
   );
 
+  const ToiletRatingsRef = realTimeDatabaseRef(
+    realTimeDatabase,
+    DB_APPDATA_KEY + "/Ratings/"
+  );
+
+  useEffect(() => {
+    // get userlikes data
+    user.email &&
+      onChildAdded(UsersLikesRef, (data) => {
+        console.log("UsersLike added");
+
+        setUsersLikesData((prev) => ({
+          ...prev,
+          [data.key]: data.val(),
+        }));
+      });
+
+    // get toilet ratings data
+    user.email &&
+      onChildAdded(ToiletRatingsRef, (data) => {
+        console.log("ToiletRatings added");
+
+        setToiletRatingsData((prev) => ({ ...prev, [data.key]: data.val() }));
+      });
+    return () => {};
+  }, [user.email]); // call useEffect twice to account for initial undefined useremail
+
+  /////////////////////////////////////
+  // Functions to get user location //
+  ///////////////////////////////////
   function success(position) {
     const userPosition = {
       latitude: position.coords.latitude,
@@ -72,6 +126,9 @@ function App() {
     }
   };
 
+  //////////////////////////////////
+  // Functions for Map Component //
+  /////////////////////////////////
   const findNearestToilets = () => {
     let coordsArray = [];
     toiletsData.map((toilet) =>
@@ -95,6 +152,17 @@ function App() {
     setNearbyToilets(result);
   };
 
+  const getAvgRatings = (toiletId) => {
+    let sumRatings = 0,
+      count = 0;
+
+    for (var key in toiletRatingsData[toiletId]) {
+      sumRatings += toiletRatingsData[toiletId][key];
+      count++;
+    }
+    return sumRatings / count;
+  };
+
   // set on load map display to all toilets location
   const onLoad = (map) => {
     setMap(map);
@@ -111,66 +179,9 @@ function App() {
     setIsOpen(true);
   };
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-      }
-    });
-
-    // get toilets data
-    // user.email &&
-    onChildAdded(ToiletsDataRef, (data) => {
-      console.log("ToiletsDataRef");
-
-      setToiletsData((prev) => [...prev, data.val()]);
-    });
-
-    getUserLocation();
-
-    return () => {};
-  }, []);
-
-  useEffect(() => {
-    // get userlikes data
-    user.email &&
-      onChildAdded(UsersLikesRef, (data) => {
-        console.log("UsersLike added");
-
-        setUsersLikesData((prev) => ({
-          ...prev,
-          [data.key]: data.val(),
-        }));
-      });
-    return () => {};
-  }, [user.email]);
-
-  const ToiletRatingsRef = realTimeDatabaseRef(
-    realTimeDatabase,
-    DB_APPDATA_KEY + "/Ratings/"
-  );
-
-  useEffect(() => {
-    user.email &&
-      onChildAdded(ToiletRatingsRef, (data) => {
-        console.log("ToiletRatings added");
-
-        setToiletRatingsData((prev) => ({ ...prev, [data.key]: data.val() })); // get toilet ratings data
-      });
-
-    return () => {};
-  }, [user.email]); // call useEffect twice to account for initial undefined useremail
-
-  const getAvgRatings = (toiletId) => {
-    let sumRatings = 0,
-      count = 0;
-
-    for (var key in toiletRatingsData[toiletId]) {
-      sumRatings += toiletRatingsData[toiletId][key];
-      count++;
-    }
-    return sumRatings / count;
-  };
+  /////////////////////
+  // Other functions //
+  /////////////////////
 
   // add ID info to determine liked toilets
   let toiletsDataWithID = toiletsData.map((toilet, index) => ({

@@ -15,6 +15,8 @@ import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
 import Rating from "@mui/material/Rating";
+import Button from "@mui/material/Button";
+import SendIcon from "@mui/icons-material/Send";
 
 const DB_APPDATA_KEY = "AppData/";
 const STORAGE_USERUPLOADS_KEY = "user-review-uploads/";
@@ -120,9 +122,8 @@ function UploadReview(props) {
 
   // display
   return (
-    <form onSubmit={handlePostSubmit}>
+    <form className="Review-Container" onSubmit={handlePostSubmit}>
       {/* message input */}
-      <br />
       <h3>Review</h3>
       <Rating
         name="simple-controlled"
@@ -170,8 +171,9 @@ function UploadReview(props) {
           />
         ) : null}
       </div>
-      <br />
-      <input type="submit" value="Post" />
+      <Button type="submit" variant="contained" endIcon={<SendIcon />}>
+        Post
+      </Button>
     </form>
   );
 }

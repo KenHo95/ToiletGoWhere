@@ -57,9 +57,9 @@ function ReviewList(props) {
     return () => {};
   }, [id]);
 
+  // List of reviews with date, user email, rating, review text, photo information
   let reviewListItems = toiletReviewsData.map((review) => (
     <li key={review.key}>
-      {/* like button */}
       <p>Date: {review.val.date}</p>
       <p>User: {review.val.email}</p>
       <Rating name="read-only" value={review.val.rating} readOnly />
@@ -75,10 +75,10 @@ function ReviewList(props) {
   ));
 
   return (
-    <div>
-      <h1>{selectToiletAddress}</h1>
+    <div className="Review-list-container">
+      <h2>{selectToiletAddress}</h2>
       <UploadReview selectedToilet={id} />
-      <h1>Reviews</h1>
+      <h3>Reviews</h3>
       <ul className={"review-list"}>{reviewListItems}</ul>
     </div>
   );

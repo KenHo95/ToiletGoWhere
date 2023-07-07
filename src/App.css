@@ -1,5 +1,7 @@
+/*****************************
+App
+*****************************/
 .App {
-  /* text-align: center; */
   height: 100vh;
   width: 100vw;
 }
@@ -15,11 +17,14 @@
   color: white;
 }
 
+/*****************************
+UploadReview
+*****************************/
 .inputContainer {
-  text-align: center;
-  padding: 6%;
-  border: thin solid black;
-  /* margin-bottom: 20px; */
+  padding: 4%;
+  border: thin solid white;
+  /* margin: 0; */
+  margin: 0 25%;
 }
 
 .inputTag {
@@ -31,8 +36,8 @@ label {
 }
 
 .uploadPhoto {
-  width: 300px;
-  height: 300px;
+  width: 400px;
+  height: 400px;
 }
 
 html {
@@ -46,22 +51,9 @@ html {
   box-sizing: inherit;
 }
 
-/* .upload-review-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1; 
-}
-.map-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-} */
+/*****************************
+Map
+*****************************/
 
 .Map {
   height: 60vh;
@@ -120,12 +112,14 @@ body {
 /*****************************
  Toilet List 
  *****************************/
+#toilet-list-container {
+  margin-bottom: 60px;
+}
+
 #toilet-list {
   width: 600px;
   height: 500px;
-  /* border: 1px solid white; */
   overflow: scroll;
-  /* border-right: 100px; */
   list-style-type: none;
   padding: 0;
 }
@@ -137,31 +131,13 @@ body {
   padding-bottom: 8px;
 }
 
-.toilet-item:last-child {
-  border-bottom: none;
-}
-
-.better_scrollbar::-webkit-scrollbar {
-  width: 13px;
-}
-
-.better_scrollbar::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  background-color: lightgrey;
-}
-
-.better_scrollbar::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
-}
-.better_scrollbar {
-  overflow-x: hidden !important;
-}
-
 /*****************************
  Review List 
  *****************************/
+.Review-list-container {
+  margin-bottom: 60px;
+}
+
 .review-list {
   list-style-type: none;
   padding: 0;
@@ -169,4 +145,8 @@ body {
 
 .info-window {
   color: black;
+}
+
+.Review-Container {
+  margin-bottom: 100px;
 }

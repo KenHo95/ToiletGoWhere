@@ -1,25 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import { realTimeDatabase } from "../firebase";
-import {
-  onChildAdded,
-  ref as realTimeDatabaseRef,
-  update,
-} from "firebase/database";
+import { ref as realTimeDatabaseRef, update } from "firebase/database";
 
-// styling
-// heart likes
 import { styled } from "@mui/material/styles";
 import Rating from "@mui/material/Rating";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-// toilet button
 import Button from "@mui/material/Button";
-// direction button
-import Fab from "@mui/material/Fab";
-import NavigationIcon from "@mui/icons-material/Navigation";
-// review button
-import ReviewsIcon from "@mui/icons-material/Reviews";
+
 // color of like hearts
 const StyledRating = styled(Rating)({
   "& .MuiRating-iconFilled": {
@@ -35,8 +23,6 @@ const DB_APPDATA_KEY = "AppData";
 
 //
 function ToiletList(props) {
-  const navigate = useNavigate();
-
   // set relevant refs
   const UsersLikesRef = realTimeDatabaseRef(
     realTimeDatabase,
@@ -94,31 +80,6 @@ function ToiletList(props) {
                 />
               )}
             </Button>{" "}
-            {/* direction button
-             */}
-            {/* <Fab
-              variant="extended"
-              size="small"
-              color="primary"
-              aria-label="add"
-            >
-              <NavigationIcon sx={{ mr: 0 }} />
-            </Fab>{" "} */}
-            {/* Show toilet reviews button
-             */}
-            {/* <Fab
-              variant="extended"
-              size="small"
-              color="primary"
-              aria-label="add"
-              onClick={() => {
-                props.handleMarkerClick(id, lat, lng, Address);
-                navigate(`/ReviewList/${id}`); // navigate to review list when clicked
-                console.log(id);
-              }}
-            >
-              <ReviewsIcon sx={{ mr: 0 }} />
-            </Fab> */}
           </li>
         )}
       </div>
@@ -128,15 +89,12 @@ function ToiletList(props) {
   return (
     // display toilet list
 
-    <div>
+    <div id="toilet-list-container">
       {/* {console.log("props.toiletsToDisplay")}
       {console.log(props.toiletsToDisplay)} */}
       {/* {console.log("props.usersLikesData")}
       {console.log(props.usersLikesData)} */}
       <ol id="toilet-list">{toiletsListItems}</ol>
-      <br />
-      <br />
-      <br />
     </div>
   );
 }
