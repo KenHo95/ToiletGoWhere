@@ -4,6 +4,8 @@ import { Routes, Route, Link, useLocation } from "react-router-dom";
 
 import Map from "./Components/Map";
 import AuthForm from "./Components/AuthForm";
+import { useUserContext } from "./Components/contextAuthForm";
+
 import { auth } from "./firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { realTimeDatabase } from "./firebase";
@@ -11,6 +13,7 @@ import { onChildAdded, ref as realTimeDatabaseRef } from "firebase/database";
 
 import ToiletList from "./Components/ToiletList";
 import ReviewList from "./Components/ReviewList";
+
 import LikedToiletList from "./Components/LikedToiletList";
 import { orderByDistance } from "geolib";
 import Button from "@mui/material/Button";
@@ -32,6 +35,7 @@ function App() {
   const [showAuthForm, setShowAuthForm] = useState(false);
   const [showSignInContent, setShowSignInContent] = useState(true);
   const location = useLocation();
+  const { error } = useUserContext();
 
   const ToiletsDataRef = realTimeDatabaseRef(
     realTimeDatabase,
@@ -54,13 +58,13 @@ function App() {
     );
   }
 
-  function error() {
+  function handleError() {
     console.log("Unable to retrieve user location");
   }
 
   const getUserLocation = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(success, error);
+      navigator.geolocation.getCurrentPosition(success, handleError);
     } else {
       console.log("Geolocation not supported");
     }
@@ -163,28 +167,8 @@ function App() {
 
       <header className="App-header">
         <h1>ToiletGoWhere</h1>
-        {/* <div>
-          Auth Form / Welcome Messsage
-          {user.email ? (
-            <div>
-              <h2>Welcome back {user.email}!</h2>
-              <button
-                onClick={(e) => {
-                  signOut(auth);
-                  setUser({ email: "" });
-                  // eslint-disable-next-line no-restricted-globals
-                  window.location.reload(); // to refresh user linked states
-                }}
-              >
-                Logout!
-              </button>
-            </div>
-          ) : (
-            <AuthForm />
-          )}
-        </div> */}
-        <br />
 
+        <br />
         {/* Map */}
         <Map
           toiletsData={toiletsData}
@@ -267,6 +251,8 @@ function App() {
                       </Button>
                     </div>
                   )}
+                  {error && <p className="error">{error}</p>}
+
                   {showAuthForm && <AuthForm />}
                 </div>
               )

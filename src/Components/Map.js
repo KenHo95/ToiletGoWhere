@@ -4,6 +4,7 @@ import {
   useLoadScript,
   InfoWindow,
 } from "@react-google-maps/api";
+
 import "../App.css";
 import React, { useEffect } from "react";
 
@@ -14,9 +15,12 @@ import Switch from "@mui/material/Switch";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
+const libraries = ["places"];
+
 const Map = (props) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    libraries,
   });
 
   useEffect(() => {
