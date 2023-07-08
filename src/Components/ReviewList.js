@@ -113,17 +113,23 @@ function ReviewList(props) {
 
   return (
     <div className="Review-list-container">
-      <h2>{selectToiletAddress}</h2>
+      {console.log(toiletReviewsData)} <h2>{selectToiletAddress}</h2>
       <UploadReview selectedToilet={id} />
       <h3>Reviews</h3>
-      <Grid
-        className="Review-list-container"
-        container
-        spacing={1}
-        justifyContent="center"
-      >
-        {reviewListItems}
-      </Grid>
+      <div className="Review-list-container">
+        {toiletReviewsData.length > 0 ? (
+          <Grid
+            className="Review-list-container"
+            container
+            spacing={1}
+            justifyContent="center"
+          >
+            {reviewListItems}
+          </Grid>
+        ) : (
+          "No reviews yet"
+        )}
+      </div>
     </div>
   );
 }

@@ -243,6 +243,7 @@ function App() {
         />
         <br />
 
+        {/* Navigation Buttons */}
         <Stack spacing={2} direction="row">
           <Button
             variant={buttonClickedValue === 1 ? "contained" : "outline"}
@@ -281,12 +282,9 @@ function App() {
             Search
           </Button>
         </Stack>
-
-        {/* Links */}
-        {/* <Link to="/">Home</Link>
-        <Link to="/LikedToiletList">Liked</Link>
-        <Link to="/SearchToilets">Search</Link> */}
         <br />
+
+        {/* Component Routes */}
 
         {/* ToiletList */}
         <Routes>

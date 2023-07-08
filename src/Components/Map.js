@@ -168,12 +168,12 @@ const Map = (props) => {
           />
         </FormControl>
       )}
+      {/* Reset Location Button */}
       <Button
         color="secondary"
-        aria-label="add an alarm"
-        sx={{ "border-radius": "8px" }}
+        aria-label="reset location"
         onClick={props.getUserLocation}
-        size="large"
+        sx={{ fontSize: 15 }}
       >
         <PlaceIcon /> reset
       </Button>
