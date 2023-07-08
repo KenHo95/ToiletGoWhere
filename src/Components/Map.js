@@ -7,17 +7,23 @@ import {
 
 import "../App.css";
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-import toiletIcon from "../toileticon.png";
-import userIcon from "../userIcon.png";
-
+import toiletIcon from "../Assets/toileticon.png";
+import userIcon from "../Assets/userIcon.png";
+import Rating from "@mui/material/Rating";
 import Switch from "@mui/material/Switch";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import Fab from "@mui/material/Fab";
+import ReviewsIcon from "@mui/icons-material/Reviews";
+import PlaceIcon from "@mui/icons-material/Place";
+import Button from "@mui/material/Button";
 
 const libraries = ["places"];
 
 const Map = (props) => {
+  const navigate = useNavigate();
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     libraries,
@@ -29,7 +35,7 @@ const Map = (props) => {
       props.findNearestToilets();
 
     return () => {};
-  }, [props.userLocation, props.toiletsData]);
+  }, [props.userLocation, props.toiletsData]); // runs on either change to ensure nearest toilets is populated
 
   // markers to set map bound to show whole of singapore
   const markers = [
@@ -80,27 +86,50 @@ const Map = (props) => {
           >
             {/* Toilet markers */}
             {props.toiletsToDisplay.map(
-              ({ Address, Area, Name, Type, lat, lng }, Ind) => (
+              ({ Address, Area, Name, Type, id, lat, lng }) => (
                 <MarkerF
-                  key={Ind}
+                  key={id}
                   position={{ lat, lng }}
                   icon={{
                     url: toiletIcon,
                     scaledSize: new window.google.maps.Size(50, 50),
                   }}
                   onClick={() => {
-                    props.handleMarkerClick(Ind, lat, lng, Address);
+                    props.handleMarkerClick(id, lat, lng, Address);
                   }}
                 >
-                  {props.isOpen && props.infoWindowData?.id === Ind && (
+                  {props.isOpen && props.infoWindowData?.id === id && (
                     <InfoWindow
                       onCloseClick={() => {
                         props.setIsOpen(false);
                       }}
                     >
-                      <h3 className="info-window">
-                        {props.infoWindowData.address}
-                      </h3>
+                      <div className="info-window">
+                        <h3>{props.infoWindowData.address}</h3>
+                        {!isNaN(props.getAvgRatings(id)) ? (
+                          <Rating
+                            name="read-only"
+                            value={props.getAvgRatings(id)}
+                            readOnly
+                          />
+                        ) : (
+                          <h3>No ratings yet..</h3>
+                        )}
+                        <h3>
+                          See Reviews{" "}
+                          <Fab
+                            variant="extended"
+                            size="small"
+                            color="primary"
+                            aria-label="add"
+                            onClick={() => {
+                              navigate(`/ReviewList/${id}`); // navigate to review list when clicked
+                            }}
+                          >
+                            <ReviewsIcon sx={{ mr: 0 }} />
+                          </Fab>
+                        </h3>
+                      </div>
                     </InfoWindow>
                   )}
                 </MarkerF>
@@ -141,6 +170,15 @@ const Map = (props) => {
           />
         </FormControl>
       )}
+      {/* Reset Location Button */}
+      <Button
+        color="secondary"
+        aria-label="reset location"
+        onClick={props.getUserLocation}
+        sx={{ fontSize: 15 }}
+      >
+        <PlaceIcon /> reset
+      </Button>
     </div>
   );
 };

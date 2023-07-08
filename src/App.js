@@ -1,6 +1,6 @@
 import "./App.css";
 import { React, useState, useEffect } from "react";
-import { Routes, Route, Link, useLocation } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 
 import Map from "./Components/Map";
 import AuthForm from "./Components/AuthForm";
@@ -16,12 +16,19 @@ import ReviewList from "./Components/ReviewList";
 
 import LikedToiletList from "./Components/LikedToiletList";
 import { orderByDistance } from "geolib";
+
+import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import HomeIcon from "@mui/icons-material/Home";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import SearchIcon from "@mui/icons-material/Search";
 
 const DB_TOILETDATA_KEY = "ToiletData";
 const DB_APPDATA_KEY = "AppData";
 
 function App() {
+  const navigate = useNavigate();
+
   // initialise initial states and set states
   const [user, setUser] = useState({ email: "" });
   const [toiletsData, setToiletsData] = useState([]);
@@ -34,19 +41,75 @@ function App() {
   const [showNearbyToilets, setShowNearbyToilets] = useState(false);
   const [showAuthForm, setShowAuthForm] = useState(false);
   const [showSignInContent, setShowSignInContent] = useState(true);
-  const location = useLocation();
   const { error } = useUserContext();
+  const [toiletRatingsData, setToiletRatingsData] = useState([]);
+  const [buttonClickedValue, setbuttonClickedValue] = useState(1);
 
+  //////////////////////////////////////////
+  // Functions to get data from firebase //
+  /////////////////////////////////////////
   const ToiletsDataRef = realTimeDatabaseRef(
     realTimeDatabase,
     DB_TOILETDATA_KEY
   );
+
+  const ToiletRatingsRef = realTimeDatabaseRef(
+    realTimeDatabase,
+    DB_APPDATA_KEY + "/Ratings/"
+  );
+
+  useEffect(() => {
+    // set user data after login
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+      }
+    });
+
+    // get toilets data
+    onChildAdded(ToiletsDataRef, (data) => {
+      console.log("ToiletsDataRef");
+
+      setToiletsData((prev) => [...prev, data.val()]);
+    });
+
+    // get toilet ratings data
+    // user.email &&
+    onChildAdded(ToiletRatingsRef, (data) => {
+      console.log("ToiletRatings added");
+
+      setToiletRatingsData((prev) => ({ ...prev, [data.key]: data.val() }));
+    });
+
+    // get User Location
+    getUserLocation();
+
+    return () => {};
+  }, []);
 
   const UsersLikesRef = realTimeDatabaseRef(
     realTimeDatabase,
     DB_APPDATA_KEY + `/LikedToilets/${user.email.split(".")[0]}/` // format userEmail to firebase acceptable format
   );
 
+  useEffect(() => {
+    // get userlikes data
+    user.email &&
+      onChildAdded(UsersLikesRef, (data) => {
+        console.log("UsersLike added");
+
+        setUsersLikesData((prev) => ({
+          ...prev,
+          [data.key]: data.val(),
+        }));
+      });
+
+    return () => {};
+  }, [user.email]); // call useEffect when user login
+
+  /////////////////////////////////////
+  // Functions to get user location //
+  ///////////////////////////////////
   function success(position) {
     const userPosition = {
       latitude: position.coords.latitude,
@@ -70,6 +133,9 @@ function App() {
     }
   };
 
+  //////////////////////////////////
+  // Functions for Map Component //
+  /////////////////////////////////
   const findNearestToilets = () => {
     let coordsArray = [];
     toiletsData.map((toilet) =>
@@ -93,6 +159,17 @@ function App() {
     setNearbyToilets(result);
   };
 
+  const getAvgRatings = (toiletId) => {
+    let sumRatings = 0,
+      count = 0;
+
+    for (var key in toiletRatingsData[toiletId]) {
+      sumRatings += toiletRatingsData[toiletId][key];
+      count++;
+    }
+    return sumRatings / count;
+  };
+
   // set on load map display to all toilets location
   const onLoad = (map) => {
     setMap(map);
@@ -109,39 +186,9 @@ function App() {
     setIsOpen(true);
   };
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser({ email: user.email });
-      }
-    });
-
-    // get toilets data
-    // user.email &&
-    onChildAdded(ToiletsDataRef, (data) => {
-      console.log("ToiletsDataRef");
-
-      setToiletsData((prev) => [...prev, data.val()]);
-    });
-
-    getUserLocation();
-
-    return () => {};
-  }, []);
-
-  useEffect(() => {
-    // get userlikes data
-    user.email &&
-      onChildAdded(UsersLikesRef, (data) => {
-        console.log("UsersLike added");
-
-        setUsersLikesData((prev) => ({
-          ...prev,
-          [data.key]: data.val(),
-        }));
-      });
-    return () => {};
-  }, [user.email]);
+  /////////////////////
+  // Other functions //
+  /////////////////////
 
   // add ID info to determine liked toilets
   let toiletsDataWithID = toiletsData.map((toilet, index) => ({
@@ -163,8 +210,7 @@ function App() {
   return (
     <div className="App">
       {/* {(userLocation !== {} && toiletsData !== [] && )findNearestToilets()} */}
-      {/* {console.log(toiletsData)} */}
-
+      {/* {console.log(toiletRatingsData)} */}
       <header className="App-header">
         <h1>ToiletGoWhere</h1>
 
@@ -187,13 +233,53 @@ function App() {
           handleMarkerClick={handleMarkerClick}
           toiletsToDisplay={toiletsToDisplay}
           userLoggedIn={user.email !== ""}
+          getAvgRatings={getAvgRatings}
+          getUserLocation={getUserLocation}
         />
-
-        {/* Links */}
-        <Link to="/">Home</Link>
-        <Link to="/LikedToiletList">Liked</Link>
-        <Link to="/SearchToilets">Search</Link>
         <br />
+
+        {/* Navigation Buttons */}
+        <Stack spacing={2} direction="row">
+          <Button
+            variant={buttonClickedValue === 1 ? "contained" : "outline"}
+            onClick={() => {
+              setbuttonClickedValue(1);
+              navigate(`/`);
+            }}
+            size="large"
+            sx={{ fontSize: 24 }}
+            startIcon={<HomeIcon />}
+          >
+            Home
+          </Button>
+          <Button
+            variant={buttonClickedValue === 2 ? "contained" : "outline"}
+            onClick={() => {
+              setbuttonClickedValue(2);
+              navigate(`/LikedToiletList`);
+            }}
+            size="large"
+            sx={{ fontSize: 24 }}
+            startIcon={<FavoriteIcon />}
+          >
+            Likes
+          </Button>
+          <Button
+            variant={buttonClickedValue === 3 ? "contained" : "outline"}
+            onClick={() => {
+              setbuttonClickedValue(3);
+              navigate(`/SearchToilets`);
+            }}
+            size="large"
+            sx={{ fontSize: 24 }}
+            startIcon={<SearchIcon />}
+          >
+            Search
+          </Button>
+        </Stack>
+        <br />
+
+        {/* Component Routes */}
 
         {/* ToiletList */}
         <Routes>
@@ -206,6 +292,7 @@ function App() {
                 userEmail={user.email}
                 handleMarkerClick={handleMarkerClick}
                 showNearbyToilets={showNearbyToilets}
+                getAvgRatings={getAvgRatings}
               />
             }
           />
@@ -223,6 +310,7 @@ function App() {
                     toiletsToDisplay={toiletsToDisplay}
                     usersLikesData={usersLikesData}
                     handleMarkerClick={handleMarkerClick}
+                    getAvgRatings={getAvgRatings}
                   />{" "}
                   <button
                     onClick={(e) => {

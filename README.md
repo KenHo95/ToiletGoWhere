@@ -1,5 +1,5 @@
 # ToiletGoWhere
-Bootcamp Full Stack Project 2: An app that allows users to look for the best toilets in Singapore and rate them, ensuring users are able to find a clean and accessible restroom nearby.
+A WebApp that allows users to look for the best toilets in Singapore and rate them, enabling users to find clean accessible restroom.
 
 ## Available Scripts
 
@@ -12,4 +12,18 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
+
+# Features
+
+## 1. Toilets and User location display on Google Maps
+
+Toilet locations sourced from https://www.toilet.org.sg/loomapdirectory
+
+## 2. Show nearby toilets
+
+## 3. User Authentication
+
+## 4. Save toilets' location as likes
+
+## 5. Review toilets + See Reviews
 
