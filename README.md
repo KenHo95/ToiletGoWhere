@@ -24,15 +24,14 @@ You may also see any lint errors in the console.
 
 ## 🌈 Features
 
-**1. Toilets and User location display on Google Maps
-**
+**1. Toilets and User location display on Google Maps**
+
 Toilet locations sourced from https://www.toilet.org.sg/loomapdirectory
 
-** 2. Show nearby toilets
-**
-** 3. User Authentication
-**
-** 4. Save toilets' location as likes
-**
-** 5. Review toilets + See Reviews
-**
+**2. Show nearby toilets**
+
+**3. User Authentication**
+
+**4. Save toilets' location as likes**
+
+**5. Review toilets + See Reviews**

@@ -53,10 +53,13 @@ const Header = (props) => {
   const onPlaceChanged = () => {
     const lat = autocomplete.getPlace().geometry.location.lat();
     const lng = autocomplete.getPlace().geometry.location.lng();
+
     props.setUserLocation({
       latitude: lat,
       longitude: lng,
     });
+    props.map?.panTo({ lat, lng });
+    props.map?.setZoom(16);
   };
 
   return (

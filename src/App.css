@@ -118,10 +118,16 @@ body {
   margin-bottom: 60px;
 }
 
+#toilet-list::-webkit-scrollbar {
+  display: none;
+}
+
 #toilet-list {
   width: 600px;
   height: 500px;
   overflow: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
   overflow-x: hidden; /* Hide horizontal scrollbar */
   list-style-type: none;
   padding: 0;

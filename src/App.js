@@ -31,7 +31,6 @@ const DB_APPDATA_KEY = "AppData";
 
 function App() {
   const navigate = useNavigate();
-
   // initialise initial states and set states
   const [user, setUser] = useState({ email: "" });
   const [toiletsData, setToiletsData] = useState([]);
@@ -213,8 +212,6 @@ function App() {
 
   return (
     <div className="App">
-      {/* {(userLocation !== {} && toiletsData !== [] && )findNearestToilets()} */}
-      {/* {console.log(toiletRatingsData)} */}
       <header className="App-header">
         <h1>ToiletGoWhere</h1>
         <br />
@@ -346,8 +343,6 @@ function App() {
                       <Button
                         variant="contained"
                         onClick={() => {
-                          // setShowAuthForm(true);
-                          // setShowSignInContent(false);
                           navigate("/AuthForm");
                         }}
                       >
@@ -356,8 +351,6 @@ function App() {
                     </div>
                   )}
                   {error && <p className="error">{error}</p>}
-
-                  {/* {showAuthForm && <AuthForm />} */}
                 </div>
               )
             }
@@ -381,7 +374,7 @@ function App() {
                 <div>
                   {showSignInContent && (
                     <div>
-                      Sign in to search/save your favorite toilet!
+                      Sign in to save your favorite toilet!
                       <br />
                       <br />
                       <Button
@@ -409,7 +402,12 @@ function App() {
             element={
               user.email !== "" ? (
                 <div>
-                  <Header setUserLocation={setUserLocation} />
+                  <Header
+                    setUserLocation={setUserLocation}
+                    setShowNearbyToilets={setShowNearbyToilets}
+                    setIsOpen={setIsOpen}
+                    map={map}
+                  />
                 </div>
               ) : (
                 <div>

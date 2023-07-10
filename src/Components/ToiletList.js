@@ -124,28 +124,6 @@ function ToiletList(props) {
             </Button>{" "}
             {/* direction button
              */}
-            <Fab
-              variant="extended"
-              size="small"
-              color="primary"
-              aria-label="add"
-            >
-              <NavigationIcon sx={{ mr: 0 }} />
-            </Fab>{" "}
-            {/* Show toilet reviews button
-             */}
-            <Fab
-              variant="extended"
-              size="small"
-              color="primary"
-              aria-label="add"
-              onClick={() => {
-                props.handleMarkerClick(id, lat, lng, Address);
-                navigate(`/ReviewList/${id}`); // navigate to review list when clicked
-              }}
-            >
-              <ReviewsIcon sx={{ mr: 0 }} />
-            </Fab>
           </li>
         )}
       </div>
