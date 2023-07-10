@@ -1,15 +1,17 @@
 import { React, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { realTimeDatabase } from "../firebase";
 import {
   ref as realTimeDatabaseRef,
   onChildAdded,
   get,
 } from "firebase/database";
+import { useUserContext } from "./contextAuthForm";
+// import AuthForm from "./AuthForm";
 
 import Rating from "@mui/material/Rating";
 import UploadReview from "./UploadReview";
-
+import Button from "@mui/material/Button";
 import { Grid } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -26,6 +28,11 @@ function ReviewList(props) {
   // initialise initial states and set states
   const [selectToiletAddress, setSelectToiletAddress] = useState([]);
   const [toiletReviewsData, setToiletReviewsData] = useState([]);
+  const { error } = useUserContext();
+  // const [showAuthForm, setShowAuthForm] = useState(false);
+  const [showSignInContent, setShowSignInContent] = useState(true);
+  const navigate = useNavigate();
+
   let { id } = useParams(); // get selected toilet from url params as this persist after user refreshes page
 
   const toiletReviewsRef = realTimeDatabaseRef(
@@ -114,7 +121,34 @@ function ReviewList(props) {
   return (
     <div className="Review-list-container">
       {console.log(toiletReviewsData)} <h2>{selectToiletAddress}</h2>
-      <UploadReview selectedToilet={id} />
+      {props.userEmail !== "" ? (
+        <div>
+          <UploadReview selectedToilet={id} />
+        </div>
+      ) : (
+        <div>
+          {showSignInContent && (
+            <div>
+              Sign in to review your favorite toilet!
+              <br />
+              <br />
+              <Button
+                variant="contained"
+                onClick={() => {
+                  // setShowAuthForm(true);
+                  // setShowSignInContent(false);
+                  navigate("/AuthForm");
+                }}
+              >
+                Sign In Here
+              </Button>
+            </div>
+          )}
+          {error && <p className="error">{error}</p>}
+
+          {/* {showAuthForm && <AuthForm />} */}
+        </div>
+      )}
       <h3>Reviews</h3>
       <div className="Review-list-container">
         {toiletReviewsData.length > 0 ? (

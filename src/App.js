@@ -1,19 +1,21 @@
 import "./App.css";
 import { React, useState, useEffect } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 
 import Map from "./Components/Map";
 import AuthForm from "./Components/AuthForm";
+import Account from "./Components/Account";
+
 import { useUserContext } from "./Components/contextAuthForm";
 
 import { auth } from "./firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { realTimeDatabase } from "./firebase";
 import { onChildAdded, ref as realTimeDatabaseRef } from "firebase/database";
 
 import ToiletList from "./Components/ToiletList";
 import ReviewList from "./Components/ReviewList";
-
+import Header from "./Components/Search";
 import LikedToiletList from "./Components/LikedToiletList";
 import { orderByDistance } from "geolib";
 
@@ -22,6 +24,7 @@ import Button from "@mui/material/Button";
 import HomeIcon from "@mui/icons-material/Home";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import SearchIcon from "@mui/icons-material/Search";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 const DB_TOILETDATA_KEY = "ToiletData";
 const DB_APPDATA_KEY = "AppData";
@@ -44,6 +47,7 @@ function App() {
   const { error } = useUserContext();
   const [toiletRatingsData, setToiletRatingsData] = useState([]);
   const [buttonClickedValue, setbuttonClickedValue] = useState(1);
+  const location = useLocation();
 
   //////////////////////////////////////////
   // Functions to get data from firebase //
@@ -213,7 +217,6 @@ function App() {
       {/* {console.log(toiletRatingsData)} */}
       <header className="App-header">
         <h1>ToiletGoWhere</h1>
-
         <br />
         {/* Map */}
         <Map
@@ -275,6 +278,18 @@ function App() {
             startIcon={<SearchIcon />}
           >
             Search
+          </Button>{" "}
+          <Button
+            variant={buttonClickedValue === 4 ? "contained" : "outline"}
+            onClick={() => {
+              setbuttonClickedValue(4);
+              navigate(`/Account`);
+            }}
+            size="large"
+            sx={{ fontSize: 24 }}
+            startIcon={<ManageAccountsIcon />}
+          >
+            Account
           </Button>
         </Stack>
         <br />
@@ -293,11 +308,60 @@ function App() {
                 handleMarkerClick={handleMarkerClick}
                 showNearbyToilets={showNearbyToilets}
                 getAvgRatings={getAvgRatings}
+                user={user} // Pass the user object as a prop
               />
             }
           />
           {/* Review */}
-          <Route path={"/ReviewList/:id"} element={<ReviewList />} />
+          <Route
+            path={"/ReviewList/:id"}
+            element={
+              <ReviewList
+                userEmail={user.email}
+                showSignInContent={showSignInContent}
+                setShowSignInContent={setShowSignInContent}
+                showAuthForm={showAuthForm}
+                setShowAuthForm={setShowAuthForm}
+              />
+            }
+          />
+
+          {/* Login */}
+          <Route path={"/AuthForm"} element={<AuthForm />} />
+          {/* Account */}
+          <Route
+            path={"/Account"}
+            element={
+              user.email !== "" ? (
+                <div>
+                  <Account />
+                </div>
+              ) : (
+                <div>
+                  {showSignInContent && (
+                    <div>
+                      Sign in to search/save your favorite toilet!
+                      <br />
+                      <br />
+                      <Button
+                        variant="contained"
+                        onClick={() => {
+                          // setShowAuthForm(true);
+                          // setShowSignInContent(false);
+                          navigate("/AuthForm");
+                        }}
+                      >
+                        Sign In Here
+                      </Button>
+                    </div>
+                  )}
+                  {error && <p className="error">{error}</p>}
+
+                  {/* {showAuthForm && <AuthForm />} */}
+                </div>
+              )
+            }
+          />
 
           {/* LikedToiletList */}
           <Route
@@ -312,22 +376,48 @@ function App() {
                     handleMarkerClick={handleMarkerClick}
                     getAvgRatings={getAvgRatings}
                   />{" "}
-                  <button
-                    onClick={(e) => {
-                      signOut(auth);
-                      setUser({ email: "" });
-                      // eslint-disable-next-line no-restricted-globals
-                      window.location.reload(); // to refresh user linked states
-                    }}
-                  >
-                    Logout!
-                  </button>
                 </div>
               ) : (
                 <div>
                   {showSignInContent && (
                     <div>
-                      <p>Sign in to search/save your favorite toilet!</p>
+                      Sign in to search/save your favorite toilet!
+                      <br />
+                      <br />
+                      <Button
+                        variant="contained"
+                        onClick={() => {
+                          setShowAuthForm(true);
+                          setShowSignInContent(false);
+                        }}
+                      >
+                        Sign In Here
+                      </Button>
+                    </div>
+                  )}
+                  {error && <p className="error">{error}</p>}
+
+                  {showAuthForm && <AuthForm />}
+                </div>
+              )
+            }
+          />
+
+          {/* Search ToiletList */}
+          <Route
+            path="/SearchToilets"
+            element={
+              user.email !== "" ? (
+                <div>
+                  <Header setUserLocation={setUserLocation} />
+                </div>
+              ) : (
+                <div>
+                  {showSignInContent && (
+                    <div>
+                      Sign in to search/save your favorite toilet!
+                      <br />
+                      <br />
                       <Button
                         variant="contained"
                         onClick={() => {
@@ -349,7 +439,6 @@ function App() {
         </Routes>
       </header>
     </div>
-    // </>
   );
 }
 

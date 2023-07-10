@@ -10,6 +10,7 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 import { auth } from "../firebase";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export const UserContext = createContext({});
 
@@ -22,6 +23,8 @@ export const UserContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState(""); // Define the successMessage state
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useState(() => {
     setLoading(true);
@@ -66,7 +69,16 @@ export const UserContextProvider = ({ children }) => {
     setError("");
 
     signInWithPopup(auth, new GoogleAuthProvider())
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res);
+        // Navigate the user to the previous page after successful sign-in
+        if (location.state && location.state.from) {
+          navigate(location.state.from);
+        } else {
+          navigate("/");
+        }
+      })
+
       .catch((err) => setError(err.code))
       .finally(() => setLoading(false));
   };
@@ -101,8 +113,9 @@ export const UserContextProvider = ({ children }) => {
   };
   return (
     <div>
-      {successMessage && <p>{successMessage}</p>}
-
+      {/* Apply CSS class to the error message */}
+      {error && <p className="error">{error}</p>}
+      {successMessage && <p className="error">{successMessage}</p>}
       <UserContext.Provider value={contextValue}>
         {children}
       </UserContext.Provider>

@@ -1,5 +1,7 @@
 import React, { useRef } from "react";
 import { useUserContext } from "./contextAuthForm";
+import Button from "@mui/material/Button";
+
 const Signup = () => {
   const emailRef = useRef();
   const nameRef = useRef();
@@ -21,7 +23,9 @@ const Signup = () => {
         <input placeholder="Email" type="email" ref={emailRef} />
         <input placeholder="Name" type="name" ref={nameRef} />
         <input placeholder="Password" type="password" ref={psdRef} />
-        <button type="submit">Register</button>
+        <Button variant="contained" type="submit">
+          Sign Up
+        </Button>
       </form>
     </div>
   );

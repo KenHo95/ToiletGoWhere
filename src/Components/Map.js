@@ -1,7 +1,7 @@
 import {
   GoogleMap,
   MarkerF,
-  useLoadScript,
+  // useLoadScript,
   InfoWindow,
 } from "@react-google-maps/api";
 
@@ -20,14 +20,11 @@ import ReviewsIcon from "@mui/icons-material/Reviews";
 import PlaceIcon from "@mui/icons-material/Place";
 import Button from "@mui/material/Button";
 
-const libraries = ["places"];
-
 const Map = (props) => {
   const navigate = useNavigate();
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.REACT_APP_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-    libraries,
-  });
+  // const { isLoaded } = useLoadScript({
+  //   googleMapsApiKey: process.env.REACT_APP_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+  // });
 
   useEffect(() => {
     // Compute nearest toilets only when user location and toilet data are loaded
@@ -76,7 +73,7 @@ const Map = (props) => {
       {/* {console.log(props.toiletsToDisplay)}{" "} */}
       <div className="Map">
         {/* Show maps and toilet list display only on map and toilets data array loaded */}
-        {!isLoaded || props.toiletsToDisplay.length === 0 ? (
+        {props.toiletsToDisplay.length === 0 ? (
           <h1>Loading...</h1>
         ) : (
           <GoogleMap

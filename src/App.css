@@ -15,6 +15,7 @@ App
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  padding-bottom: 150px;
 }
 
 /*****************************
@@ -24,7 +25,7 @@ UploadReview
   padding: 4%;
   border: thin solid white;
   /* margin: 0; */
-  margin: 0 25%;
+  margin: 25%;
 }
 
 .inputTag {
@@ -121,6 +122,7 @@ body {
   width: 600px;
   height: 500px;
   overflow: scroll;
+  overflow-x: hidden; /* Hide horizontal scrollbar */
   list-style-type: none;
   padding: 0;
 }
@@ -147,7 +149,9 @@ body {
 .info-window {
   color: black;
 }
-
+/*****************************
+Auth page
+ *****************************/
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -173,13 +177,12 @@ input {
   width: 93%;
 }
 
-button {
+.authbutton {
   background-color: teal;
   border: none;
   color: white;
   padding: 12px;
   margin: 12px 0;
-  box-shadow: 0 1px 6px #ccc;
   border-radius: 6px;
   font-size: 18px;
 }
@@ -227,6 +230,21 @@ button {
   font-weight: bold;
   max-width: 400px;
   margin-bottom: 18px;
+  /* Add the following properties to position the error message */
+  position: absolute;
+}
+
+p:link {
+  text-decoration: none;
+}
+p:visited {
+  text-decoration: none;
+}
+p:hover {
+  text-decoration: underline;
+}
+p:active {
+  text-decoration: underline;
 }
 
 /*****************************
@@ -235,3 +253,7 @@ button {
 .Review-Container {
   margin-bottom: 100px;
 }
+
+/*****************************
+ Search 
+ *****************************/
