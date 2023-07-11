@@ -35,3 +35,11 @@ Toilet locations sourced from https://www.toilet.org.sg/loomapdirectory
 **4. Save toilets' location as likes**
 
 **5. Review toilets + See Reviews**
+
+## 📱 Wire Frame (MVP)
+
+![Image of user flow ](/Assets/wireframe.jpg)
+
+## 🧠 ERD
+
+![Image of ERD](/Assets/ERD.png)

@@ -31,7 +31,7 @@ const Signin = () => {
 
   return (
     <div className="form">
-      <h2> Login </h2>
+      <h2> Sign in </h2>
       <form onSubmit={onSubmit}>
         <input placeholder="Email" type="email" ref={emailRef} />
         <input placeholder="Password" type="password" ref={psdRef} />

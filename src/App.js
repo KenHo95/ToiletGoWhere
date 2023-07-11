@@ -213,7 +213,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>ToiletGoWhere</h1>
+        <b>🚽 ToiletGoWhere</b>
         <br />
         {/* Map */}
         <Map
@@ -237,7 +237,6 @@ function App() {
           getUserLocation={getUserLocation}
         />
         <br />
-
         {/* Navigation Buttons */}
         <Stack spacing={2} direction="row">
           <Button
@@ -290,9 +289,7 @@ function App() {
           </Button>
         </Stack>
         <br />
-
         {/* Component Routes */}
-
         {/* ToiletList */}
         <Routes>
           <Route
@@ -325,6 +322,7 @@ function App() {
 
           {/* Login */}
           <Route path={"/AuthForm"} element={<AuthForm />} />
+
           {/* Account */}
           <Route
             path={"/Account"}
@@ -337,7 +335,7 @@ function App() {
                 <div>
                   {showSignInContent && (
                     <div>
-                      Sign in to search/save your favorite toilet!
+                      Sign in to your Account!
                       <br />
                       <br />
                       <Button
@@ -413,7 +411,7 @@ function App() {
                 <div>
                   {showSignInContent && (
                     <div>
-                      Sign in to search/save your favorite toilet!
+                      Sign in to continue your toilet search!
                       <br />
                       <br />
                       <Button
