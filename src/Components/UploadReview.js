@@ -132,7 +132,6 @@ function UploadReview(props) {
           setRatingInputValue(newValue);
         }}
       />
-      <br />
       <input
         type="text"
         value={reviewInput}
@@ -141,8 +140,6 @@ function UploadReview(props) {
         }}
         placeholder="How is this toilet?"
       />{" "}
-      <br />
-      <br />
       {/* photo upload */}
       <div className="inputContainer">
         <label>
@@ -158,10 +155,8 @@ function UploadReview(props) {
               setfileInputFile(e.target.files[0]);
             }}
           />
-          <br />
         </label>
       </div>
-      <br />
       <div>
         {fileInputFile !== null ? (
           <img

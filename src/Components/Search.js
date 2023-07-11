@@ -63,7 +63,7 @@ const Header = (props) => {
   };
 
   return (
-    <Search>
+    <Search className="search">
       <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
         <div>
           <SearchIconWrapper>

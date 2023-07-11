@@ -2,12 +2,6 @@ import "./App.css";
 import { React, useState, useEffect } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 
-import Map from "./Components/Map";
-import AuthForm from "./Components/AuthForm";
-import Account from "./Components/Account";
-
-import { useUserContext } from "./Components/contextAuthForm";
-
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { realTimeDatabase } from "./firebase";
@@ -17,6 +11,10 @@ import ToiletList from "./Components/ToiletList";
 import ReviewList from "./Components/ReviewList";
 import Header from "./Components/Search";
 import LikedToiletList from "./Components/LikedToiletList";
+import Map from "./Components/Map";
+import AuthForm from "./Components/AuthForm";
+import Account from "./Components/Account";
+import { useUserContext } from "./Components/contextAuthForm";
 import { orderByDistance } from "geolib";
 
 import Stack from "@mui/material/Stack";
@@ -45,7 +43,6 @@ function App() {
   const [showSignInContent, setShowSignInContent] = useState(true);
   const { error } = useUserContext();
   const [toiletRatingsData, setToiletRatingsData] = useState([]);
-  const [buttonClickedValue, setbuttonClickedValue] = useState(1);
   const location = useLocation();
 
   //////////////////////////////////////////
@@ -71,16 +68,12 @@ function App() {
 
     // get toilets data
     onChildAdded(ToiletsDataRef, (data) => {
-      console.log("ToiletsDataRef");
-
       setToiletsData((prev) => [...prev, data.val()]);
     });
 
     // get toilet ratings data
     // user.email &&
     onChildAdded(ToiletRatingsRef, (data) => {
-      console.log("ToiletRatings added");
-
       setToiletRatingsData((prev) => ({ ...prev, [data.key]: data.val() }));
     });
 
@@ -99,8 +92,6 @@ function App() {
     // get userlikes data
     user.email &&
       onChildAdded(UsersLikesRef, (data) => {
-        console.log("UsersLike added");
-
         setUsersLikesData((prev) => ({
           ...prev,
           [data.key]: data.val(),
@@ -119,9 +110,8 @@ function App() {
       longitude: position.coords.longitude,
     };
     setUserLocation(userPosition);
-    console.log(
-      `Latitude: ${userPosition.latitude}, Longitude: ${userPosition.longitude}`
-    );
+    map?.panTo({ lat: userPosition.latitude, lng: userPosition.longitude });
+    map?.setZoom(14);
   }
 
   function handleError() {
@@ -170,6 +160,7 @@ function App() {
       sumRatings += toiletRatingsData[toiletId][key];
       count++;
     }
+
     return sumRatings / count;
   };
 
@@ -203,12 +194,56 @@ function App() {
   let toiletsToDisplay = showNearbyToilets ? nearbyToilets : toiletsDataWithID;
 
   useEffect(() => {
-    if (location.pathname === "/") {
-      // Reset the state when user navigates to the homepage
-      setShowAuthForm(false);
-      setShowSignInContent(true);
-    }
+    // Reset the sign in redirect state when user navigates elsewhere
+    setShowAuthForm(false);
+    setShowSignInContent(true);
+    return;
   }, [location]);
+
+  // generate nav button
+  const navButton = (pathName, icon, buttonText) => {
+    // get path
+    let urlPath = window.location.pathname;
+
+    return (
+      <Button
+        variant={urlPath === pathName ? "contained" : "outline"}
+        onClick={() => {
+          navigate(pathName);
+        }}
+        size="large"
+        sx={{ fontSize: 24 }}
+        startIcon={icon}
+      >
+        {buttonText}
+      </Button>
+    );
+  };
+
+  // button to direct to auth form
+  const signInButton = (message) => {
+    return (
+      <div className="signInDirectButton">
+        {showSignInContent && (
+          <div>
+            {message}
+            <br />
+            <br />
+            <Button
+              variant="contained"
+              onClick={() => {
+                setShowSignInContent(false);
+                navigate("/AuthForm");
+              }}
+            >
+              Sign In Here
+            </Button>
+          </div>
+        )}
+        {error && <p className="error">{error}</p>}
+      </div>
+    );
+  };
 
   return (
     <div className="App">
@@ -236,59 +271,13 @@ function App() {
           getAvgRatings={getAvgRatings}
           getUserLocation={getUserLocation}
         />
-        <br />
         {/* Navigation Buttons */}
-        <Stack spacing={2} direction="row">
-          <Button
-            variant={buttonClickedValue === 1 ? "contained" : "outline"}
-            onClick={() => {
-              setbuttonClickedValue(1);
-              navigate(`/`);
-            }}
-            size="large"
-            sx={{ fontSize: 24 }}
-            startIcon={<HomeIcon />}
-          >
-            Home
-          </Button>
-          <Button
-            variant={buttonClickedValue === 2 ? "contained" : "outline"}
-            onClick={() => {
-              setbuttonClickedValue(2);
-              navigate(`/LikedToiletList`);
-            }}
-            size="large"
-            sx={{ fontSize: 24 }}
-            startIcon={<FavoriteIcon />}
-          >
-            Likes
-          </Button>
-          <Button
-            variant={buttonClickedValue === 3 ? "contained" : "outline"}
-            onClick={() => {
-              setbuttonClickedValue(3);
-              navigate(`/SearchToilets`);
-            }}
-            size="large"
-            sx={{ fontSize: 24 }}
-            startIcon={<SearchIcon />}
-          >
-            Search
-          </Button>{" "}
-          <Button
-            variant={buttonClickedValue === 4 ? "contained" : "outline"}
-            onClick={() => {
-              setbuttonClickedValue(4);
-              navigate(`/Account`);
-            }}
-            size="large"
-            sx={{ fontSize: 24 }}
-            startIcon={<ManageAccountsIcon />}
-          >
-            Account
-          </Button>
+        <Stack spacing={2} direction="row" className="navBar">
+          {navButton("/", <HomeIcon />, "Home")}
+          {navButton("/LikedToiletList", <FavoriteIcon />, "Likes")}
+          {navButton("/SearchToilets", <SearchIcon />, "Search")}
+          {navButton("/Account", <ManageAccountsIcon />, "Account")}
         </Stack>
-        <br />
         {/* Component Routes */}
         {/* ToiletList */}
         <Routes>
@@ -302,7 +291,7 @@ function App() {
                 handleMarkerClick={handleMarkerClick}
                 showNearbyToilets={showNearbyToilets}
                 getAvgRatings={getAvgRatings}
-                user={user} // Pass the user object as a prop
+                user={user}
               />
             }
           />
@@ -329,27 +318,10 @@ function App() {
             element={
               user.email !== "" ? (
                 <div>
-                  <Account />
+                  <Account setUser={setUser} />
                 </div>
               ) : (
-                <div>
-                  {showSignInContent && (
-                    <div>
-                      Sign in to your Account!
-                      <br />
-                      <br />
-                      <Button
-                        variant="contained"
-                        onClick={() => {
-                          navigate("/AuthForm");
-                        }}
-                      >
-                        Sign In Here
-                      </Button>
-                    </div>
-                  )}
-                  {error && <p className="error">{error}</p>}
-                </div>
+                signInButton("Sign in to your Account!")
               )
             }
           />
@@ -369,27 +341,7 @@ function App() {
                   />{" "}
                 </div>
               ) : (
-                <div>
-                  {showSignInContent && (
-                    <div>
-                      Sign in to save your favorite toilet!
-                      <br />
-                      <br />
-                      <Button
-                        variant="contained"
-                        onClick={() => {
-                          setShowAuthForm(true);
-                          setShowSignInContent(false);
-                        }}
-                      >
-                        Sign In Here
-                      </Button>
-                    </div>
-                  )}
-                  {error && <p className="error">{error}</p>}
-
-                  {showAuthForm && <AuthForm />}
-                </div>
+                signInButton("Sign in to save your favorite toilet!")
               )
             }
           />
@@ -408,27 +360,7 @@ function App() {
                   />
                 </div>
               ) : (
-                <div>
-                  {showSignInContent && (
-                    <div>
-                      Sign in to continue your toilet search!
-                      <br />
-                      <br />
-                      <Button
-                        variant="contained"
-                        onClick={() => {
-                          setShowAuthForm(true);
-                          setShowSignInContent(false);
-                        }}
-                      >
-                        Sign In Here
-                      </Button>
-                    </div>
-                  )}
-                  {error && <p className="error">{error}</p>}
-
-                  {showAuthForm && <AuthForm />}
-                </div>
+                signInButton("Sign in to continue your toilet search!")
               )
             }
           />

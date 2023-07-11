@@ -49,7 +49,6 @@ export const UserContextProvider = ({ children }) => {
           displayName: name,
         })
       )
-      .then((res) => console.log(res))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   };
@@ -59,7 +58,6 @@ export const UserContextProvider = ({ children }) => {
     setError("");
 
     signInWithEmailAndPassword(auth, email, password)
-      .then((res) => console.log(res))
       .catch((err) => setError(err.code))
       .finally(() => setLoading(false));
   };
@@ -70,7 +68,6 @@ export const UserContextProvider = ({ children }) => {
 
     signInWithPopup(auth, new GoogleAuthProvider())
       .then((res) => {
-        console.log(res);
         // Navigate the user to the previous page after successful sign-in
         if (location.state && location.state.from) {
           navigate(location.state.from);
