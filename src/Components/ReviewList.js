@@ -7,7 +7,6 @@ import {
   get,
 } from "firebase/database";
 import { useUserContext } from "./contextAuthForm";
-// import AuthForm from "./AuthForm";
 
 import Rating from "@mui/material/Rating";
 import UploadReview from "./UploadReview";
@@ -29,7 +28,6 @@ function ReviewList(props) {
   const [selectToiletAddress, setSelectToiletAddress] = useState([]);
   const [toiletReviewsData, setToiletReviewsData] = useState([]);
   const { error } = useUserContext();
-  // const [showAuthForm, setShowAuthForm] = useState(false);
   const [showSignInContent, setShowSignInContent] = useState(true);
   const navigate = useNavigate();
 

@@ -60,6 +60,8 @@ const Header = (props) => {
     });
     props.map?.panTo({ lat, lng });
     props.map?.setZoom(16);
+    props.setIsOpen(true);
+    props.setShowNearbyToilets(true); // Set showNearbyToilets to true
   };
 
   return (

@@ -47,6 +47,7 @@ function App() {
   const [toiletRatingsData, setToiletRatingsData] = useState([]);
   const [buttonClickedValue, setbuttonClickedValue] = useState(1);
   const location = useLocation();
+  const [searchedToilets, setSearchedToilets] = useState([]);
 
   //////////////////////////////////////////
   // Functions to get data from firebase //
@@ -404,7 +405,24 @@ function App() {
                     setUserLocation={setUserLocation}
                     setShowNearbyToilets={setShowNearbyToilets}
                     setIsOpen={setIsOpen}
+                    isOpen={isOpen} // Pass the isOpen state as a prop
+                    toiletsToDisplay={toiletsToDisplay}
                     map={map}
+                    toiletsData={toiletsData}
+                    setSearchedToilets={setSearchedToilets}
+                  />
+                  <ToiletList
+                    toiletsToDisplay={
+                      searchedToilets.length > 0
+                        ? searchedToilets
+                        : toiletsToDisplay
+                    }
+                    usersLikesData={usersLikesData}
+                    userEmail={user.email} // Pass the user.email value as the userEmail prop
+                    handleMarkerClick={handleMarkerClick}
+                    showNearbyToilets={showNearbyToilets}
+                    getAvgRatings={getAvgRatings}
+                    user={user}
                   />
                 </div>
               ) : (

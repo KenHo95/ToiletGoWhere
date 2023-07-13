@@ -22,9 +22,6 @@ import Button from "@mui/material/Button";
 
 const Map = (props) => {
   const navigate = useNavigate();
-  // const { isLoaded } = useLoadScript({
-  //   googleMapsApiKey: process.env.REACT_APP_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-  // });
 
   useEffect(() => {
     // Compute nearest toilets only when user location and toilet data are loaded
@@ -70,7 +67,6 @@ const Map = (props) => {
 
   return (
     <div>
-      {/* {console.log(props.toiletsToDisplay)}{" "} */}
       <div className="Map">
         {/* Show maps and toilet list display only on map and toilets data array loaded */}
         {props.toiletsToDisplay.length === 0 ? (

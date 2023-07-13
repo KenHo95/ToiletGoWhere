@@ -16,10 +16,6 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 // toilet button
 import Button from "@mui/material/Button";
 // direction button
-import Fab from "@mui/material/Fab";
-import NavigationIcon from "@mui/icons-material/Navigation";
-// review button
-import ReviewsIcon from "@mui/icons-material/Reviews";
 // color of like hearts
 const StyledRating = styled(Rating)({
   "& .MuiRating-iconFilled": {
@@ -134,10 +130,6 @@ function ToiletList(props) {
     // display toilet list
 
     <div>
-      {/* {console.log("props.toiletsToDisplay")}
-      {console.log(props.toiletsToDisplay)}
-      {console.log("props.usersLikesData")}
-      {console.log(props.usersLikesData)} */}
       <ol id="toilet-list">{toiletsListItems}</ol>
       <br />
       <br />

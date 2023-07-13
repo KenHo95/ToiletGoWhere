@@ -14,7 +14,7 @@ A WebApp that allows users to look for the best toilets in Singapore and rate th
 
 ## 📜 Available Scripts
 
-To run the ToiletGoWhere locally, follow these steps:
+To run the 🚽 ToiletGoWhere locally, follow these steps:
 
 1. Clone the repository: git clone <repository-url>
 2. Navigate to the project directory: cd toilet-finder-app
@@ -42,11 +42,11 @@ To run the ToiletGoWhere locally, follow these steps:
 
 ## 📱 Wire Frame (MVP)
 
-(../Assets/wireframe.jpg)
+![alt text](src/Assets/wireframe.png)
 
 ## 🧠 ERD
 
-(../Assets/ERD.png)
+![alt text](src/Assets/ERD.png)
 
 ## 💽 Data Source
 
@@ -65,13 +65,13 @@ Here are some possible enhancements and additional features to be mplemented in 
 
 Feel free to contribute to the project by adding new features, fixing bugs, or suggesting improvements. We appreciate your feedback and contributions!
 
-## Acknowledgements
+## 🗣 Acknowledgements
 
 - [Singapore Toilet Map Directory](https://www.toilet.org.sg/loomapdirectory) for providing the toilet location data.
 - [Google Maps Platform](https://developers.google.com/maps) for the mapping services.
 - [Firebase](https://firebase.google.com/) for user authentication and account management.
 
-## Contact
+## 📲 Contact
 
 For any inquiries or suggestions, please contact the project team at [toiletgowhere.app@gmail.com].
 
