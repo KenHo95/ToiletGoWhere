@@ -132,7 +132,9 @@ function UploadReview(props) {
           setRatingInputValue(newValue);
         }}
       />
+      <br />
       <input
+        className="review-input"
         type="text"
         value={reviewInput}
         onChange={(e) => {

@@ -162,7 +162,10 @@ const Map = (props) => {
       <Button
         color="secondary"
         aria-label="reset location"
-        onClick={props.getUserLocation}
+        onClick={() => {
+          props.getUserLocation();
+          props.setShowSearchedToilets(false);
+        }}
         sx={{ fontSize: 15 }}
       >
         <PlaceIcon /> reset

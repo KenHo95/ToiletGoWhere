@@ -45,7 +45,7 @@ function App() {
   const { error } = useUserContext();
   const [toiletRatingsData, setToiletRatingsData] = useState([]);
   const location = useLocation();
-  const [searchedToilets, setSearchedToilets] = useState([]);
+  const [showSearchedToilets, setShowSearchedToilets] = useState(false);
 
   //////////////////////////////////////////
   // Functions to get data from firebase //
@@ -275,6 +275,7 @@ function App() {
           userLoggedIn={user.email !== ""}
           getAvgRatings={getAvgRatings}
           getUserLocation={getUserLocation}
+          setShowSearchedToilets={setShowSearchedToilets}
         />
         {/* Navigation Buttons */}
         <Stack spacing={2} direction="row" className="navBar">
@@ -365,21 +366,20 @@ function App() {
                     toiletsToDisplay={toiletsToDisplay}
                     map={map}
                     toiletsData={toiletsData}
-                    setSearchedToilets={setSearchedToilets}
+                    setShowSearchedToilets={setShowSearchedToilets}
+                    showSearchedToilets={showSearchedToilets}
                   />
-                  <ToiletList
-                    toiletsToDisplay={
-                      searchedToilets.length > 0
-                        ? searchedToilets
-                        : toiletsToDisplay
-                    }
-                    usersLikesData={usersLikesData}
-                    userEmail={user.email} // Pass the user.email value as the userEmail prop
-                    handleMarkerClick={handleMarkerClick}
-                    showNearbyToilets={showNearbyToilets}
-                    getAvgRatings={getAvgRatings}
-                    user={user}
-                  />
+                  {showSearchedToilets && (
+                    <ToiletList
+                      toiletsToDisplay={toiletsToDisplay}
+                      usersLikesData={usersLikesData}
+                      userEmail={user.email}
+                      handleMarkerClick={handleMarkerClick}
+                      showNearbyToilets={showNearbyToilets}
+                      getAvgRatings={getAvgRatings}
+                      user={user}
+                    />
+                  )}
                 </div>
               ) : (
                 signInButton("Sign in to continue your toilet search!")
