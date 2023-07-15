@@ -26,6 +26,7 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 const DB_TOILETDATA_KEY = "ToiletData";
 const DB_APPDATA_KEY = "AppData";
+const NO_OF_NEARBY_TOILETS = 5;
 
 function App() {
   const navigate = useNavigate();
@@ -143,7 +144,10 @@ function App() {
     }));
 
     // get five nearest toilets to user location
-    let nearestToilets = orderByDistance(userLocation, coordsArray).slice(0, 5);
+    let nearestToilets = orderByDistance(userLocation, coordsArray).slice(
+      0,
+      NO_OF_NEARBY_TOILETS
+    );
     let result = toiletsDataWithID.filter((toilet) => {
       return nearestToilets.some((nearestToilet) => {
         return toilet.lat === nearestToilet.latitude;
