@@ -1,9 +1,4 @@
-import {
-  GoogleMap,
-  MarkerF,
-  // useLoadScript,
-  InfoWindow,
-} from "@react-google-maps/api";
+import { GoogleMap, MarkerF, InfoWindow } from "@react-google-maps/api";
 
 import "../App.css";
 import React, { useEffect } from "react";
@@ -129,7 +124,7 @@ const Map = (props) => {
               )
             )}
             {/* User marker*/}
-            {props.nearbyToilets.length === 5 && (
+            {props.userLocation.lat !== 0 && (
               <MarkerF
                 key="userLoc"
                 position={{
@@ -147,7 +142,7 @@ const Map = (props) => {
       </div>
       {/* Toggle btw nearby/ full toilets location display */}
       {/* Render only when nearby toilets are computed */}
-      {props.nearbyToilets.length === 5 && (
+      {props.userLocation.lat !== 0 && (
         <FormControl component="fieldset" variant="standard">
           <FormControlLabel
             control={

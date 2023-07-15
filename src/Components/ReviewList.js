@@ -28,6 +28,7 @@ function ReviewList(props) {
   const [selectToiletAddress, setSelectToiletAddress] = useState([]);
   const [toiletReviewsData, setToiletReviewsData] = useState([]);
   const { error } = useUserContext();
+  // const [showAuthForm, setShowAuthForm] = useState(false);
   const [showSignInContent, setShowSignInContent] = useState(true);
   const navigate = useNavigate();
 
@@ -47,8 +48,6 @@ function ReviewList(props) {
     setToiletReviewsData([]); // clear prev review data as user selects a new toilet
 
     onChildAdded(toiletReviewsRef, (data) => {
-      console.log("toiletReviewsData added");
-
       setToiletReviewsData((prev) => [
         ...prev,
         { key: data.key, val: data.val() },
@@ -89,7 +88,6 @@ function ReviewList(props) {
       }}
     >
       <CardActionArea>
-        {console.log(review.val.uploadURL)}
         <CardMedia
           component="img"
           image={
@@ -106,7 +104,7 @@ function ReviewList(props) {
         <CardHeader
           avatar={
             <Avatar sx={{ bgcolor: "lightblue" }} aria-label="review">
-              {review.val.email[0].toUpperCase()}
+              {review.val.email[0]}
             </Avatar>
           }
           title={review.val.email}
@@ -118,14 +116,14 @@ function ReviewList(props) {
 
   return (
     <div className="Review-list-container">
-      {console.log(toiletReviewsData)} <h2>{selectToiletAddress}</h2>
+      <h2>{selectToiletAddress}</h2>
       {props.userEmail !== "" ? (
         <div>
           <UploadReview selectedToilet={id} />
         </div>
       ) : (
         <div>
-          {showSignInContent && (
+          {props.showSignInContent && (
             <div>
               Sign in to review your favorite toilet!
               <br />
@@ -133,8 +131,6 @@ function ReviewList(props) {
               <Button
                 variant="contained"
                 onClick={() => {
-                  // setShowAuthForm(true);
-                  // setShowSignInContent(false);
                   navigate("/AuthForm");
                 }}
               >
@@ -143,8 +139,8 @@ function ReviewList(props) {
             </div>
           )}
           {error && <p className="error">{error}</p>}
-
-          {/* {showAuthForm && <AuthForm />} */}
+          <br />
+          <br />
         </div>
       )}
       <h3>Reviews</h3>

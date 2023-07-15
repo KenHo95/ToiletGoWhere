@@ -1,12 +1,14 @@
 import React, { useRef } from "react";
 import { useUserContext } from "./contextAuthForm";
 import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const emailRef = useRef();
   const nameRef = useRef();
   const psdRef = useRef();
   const { registerUser } = useUserContext();
+  const navigate = useNavigate();
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -14,6 +16,7 @@ const Signup = () => {
     const name = nameRef.current.value;
     const password = psdRef.current.value;
     if (email && password && name) registerUser(email, password, name);
+    navigate("/");
   };
 
   return (

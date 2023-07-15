@@ -12,7 +12,7 @@ const Auth = () => {
   const { signInWithGoogle } = useUserContext();
 
   return (
-    <div className="container">
+    <div className="auth-container">
       {!index ? <Signin /> : <Signup />}
       <button className="login-with-google-btn" onClick={signInWithGoogle}>
         {" "}

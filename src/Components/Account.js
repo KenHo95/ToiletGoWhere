@@ -1,23 +1,22 @@
-import React, { useState } from "react";
+import React from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 
-function Account() {
-  const [user, setUser] = useState({ email: "" });
+function Account(props) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
     signOut(auth).then(() => {
-      setUser({ email: "" });
+      props.setUser({ email: "" });
       navigate("/");
       window.location.reload();
     });
   };
 
   return (
-    <div>
+    <div className="account">
       <Button variant="contained" onClick={handleLogout}>
         Logout!
       </Button>
