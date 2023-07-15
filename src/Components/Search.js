@@ -12,8 +12,6 @@ const Search = styled("div")(({ theme }) => ({
   "&:hover": {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
   width: "100%",
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(3),
@@ -38,10 +36,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "500px",
-    },
+    "min-width": "230px",
+    [theme.breakpoints.up("md")]: {},
   },
 }));
 
@@ -71,7 +67,7 @@ const Header = (props) => {
           <SearchIconWrapper>
             <SearchIcon />
           </SearchIconWrapper>
-          <StyledInputBase placeholder="Search…" className="myCustomInput" />
+          <StyledInputBase placeholder="Search…" className="input-box" />
         </div>
       </Autocomplete>
     </Search>

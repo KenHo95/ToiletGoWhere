@@ -213,7 +213,7 @@ function App() {
           navigate(pathName);
         }}
         size="large"
-        sx={{ fontSize: 24 }}
+        sx={{ fontSize: "2vw" }}
         startIcon={icon}
       >
         {buttonText}

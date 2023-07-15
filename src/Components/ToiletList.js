@@ -11,7 +11,8 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 // toilet button
 import Button from "@mui/material/Button";
-// direction button
+
+import TableRow from "@mui/material/TableRow";
 
 // color of like hearts
 const StyledRating = styled(Rating)({
@@ -81,17 +82,23 @@ function ToiletList(props) {
               onClick={() => {
                 props.handleMarkerClick(id, lat, lng, Address);
               }}
+              className="toilet-button"
+              sx={{ "min-width": "350px" }} // res to show nicely for mobile and web
             >
-              {Address + " "}
+              {/* show address without postal code to reduce clutter on mobile
+              display */}
+              <div className="toilet-address">{Address.split(",")[0]} </div>
               {/* Display average rating stars
                */}
-              {!isNaN(props.getAvgRatings(id)) && (
-                <Rating
-                  name="read-only"
-                  value={props.getAvgRatings(id)}
-                  readOnly
-                />
-              )}
+              <div className="toilet-avgRating">
+                {!isNaN(props.getAvgRatings(id)) ? (
+                  <Rating
+                    name="read-only"
+                    value={props.getAvgRatings(id)}
+                    readOnly
+                  />
+                ) : null}
+              </div>
             </Button>{" "}
           </li>
         )}

@@ -8,15 +8,14 @@ App
 
 .App-header {
   background-color: #282c34;
-  min-height: 110vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-  padding-bottom: 50px;
-  padding-top: 20px;
+  padding: 20px 0 50px 0;
 }
 
 .signInDirectButton {
@@ -46,17 +45,6 @@ label {
   margin-bottom: 20px;
 }
 
-html {
-  box-sizing: boarder-box;
-  font-size: 100%;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: inherit;
-}
-
 /*****************************
 Map
 *****************************/
@@ -70,9 +58,9 @@ Map
   height: 100%;
   width: 100%;
 }
+
 .login-with-google-btn {
   transition: background-color 0.3s, box-shadow 0.3s;
-
   padding: 12px 16px 12px 42px;
   border: none;
   border-radius: 3px;
@@ -127,7 +115,7 @@ body {
 }
 
 #toilet-list {
-  width: 600px;
+  max-width: 600px;
   height: 500px;
   overflow: scroll;
   -ms-overflow-style: none; /* IE and Edge */
@@ -138,12 +126,18 @@ body {
 }
 
 .toilet-item {
-  width: 100%;
   cursor: pointer;
-  text-align: left;
+  text-align: center;
   padding-bottom: 8px;
 }
 
+.toilet-avgRating {
+  margin-left: 10px;
+}
+
+.toilet-button {
+  min-width: 350px;
+}
 /*****************************
  Review List 
  *****************************/
