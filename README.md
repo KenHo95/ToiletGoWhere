@@ -4,6 +4,10 @@
 
 A WebApp that allows users to look for the best toilets in Singapore and rate them, enabling users to find clean accessible restroom.
 
+![alt text](src/Assets/ToiletGoWhere_NearbyToiletSearchPreview.png)
+
+_Screenshot of a user searching for nearby toilets near Orchard Road_
+
 ## 💻 Technologies Used
 
 🚽 ToiletGoWhere is built using the following technologies:
@@ -26,7 +30,9 @@ To run the 🚽 ToiletGoWhere locally, follow these steps:
 ## 🌈 Features
 
 - **Toilets and User Location Display on Google Maps:**
-  The app integrates with Google Maps to visually display the locations of toilets. Users can see their current location and explore nearby toilet facilities.
+  The app integrates with Google Maps to visually display the locations of toilets. Users can see their current location and explore nearby toilet facilities and their average rating.
+
+  ![alt text](src/Assets/markerMapsPreview.png)
 
 - **Show Nearby Toilets:**
   The app provides the functionality to show nearby toilets based on the user's current location. Users can easily find toilets in their vicinity and get directions to the selected toilet.
@@ -34,11 +40,21 @@ To run the 🚽 ToiletGoWhere locally, follow these steps:
 - **User Authentication:**
   Users can create an account and authenticate themselves to access additional features. Authentication ensures a personalized experience and allows users to save their preferences and interact with the app securely.
 
+  ![alt text](src/Assets/AuthPage.png)
+
+- **Basic Search Functionality:**
+  Allow users to search for nearby toilets from the specified search address. This feature enables users plan ahead.
+
+  ![alt text](src/Assets/SearchFeature.png)
+
 - **Save Toilets' Location as Likes:**
   Authenticated users can save toilets' locations as their favorites. This feature enables users to bookmark toilets they frequently visit or find particularly useful for future reference.
 
 - **Review Toilets + See Reviews:**
   Users can submit reviews and ratings for toilets they have visited. This enables users to share their experiences and provide valuable feedback to other users. Additionally, users can view reviews submitted by others to make informed decisions about the quality and suitability of toilets.
+
+- **Mobile Reponsive:**
+  The app provides a reponsive display that allow users to use the app on PC or mobile. This enables user to have a seamless experience of using the app in one place or on the go.
 
 ## 📱 Wire Frame (MVP)
 
@@ -56,7 +72,7 @@ The toilet locations used in this app are sourced from the [Singapore Toilet Map
 
 Here are some possible enhancements and additional features to be mplemented in the future:
 
-- Search Functionality: Allow users to search for toilets based on specific criteria such as accessibility features, availability, cleanliness ratings, etc.
+- Advanced Search Functionality: Allow users to search for toilets based on specific criteria such as accessibility features, availability, cleanliness ratings, etc.
 - Filtering and Sorting: Provide options for users to filter and sort toilet results based on their preferences.
 - Directions and Navigation: Integrate with a mapping service to provide directions and navigation to the selected toilet.
 - Social Sharing: Enable users to share toilet locations, ratings, and reviews with others through social media or messaging platforms.
