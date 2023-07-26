@@ -12,13 +12,15 @@ const Search = styled("div")(({ theme }) => ({
   "&:hover": {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
+  width: "100%",
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(3),
+    width: "auto",
   },
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 0.5),
+  padding: theme.spacing(0, 2),
   height: "100%",
   position: "absolute",
   pointerEvents: "none",
@@ -30,9 +32,9 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 0.5, 0),
+    padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(2)})`,
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     minWidth: "240px",
   },
@@ -60,9 +62,7 @@ const Header = (props) => {
   };
 
   return (
-    <Search
-      className={!props.showSearchedToilets ? "search-base" : "search-show"}
-    >
+    <Search className="search">
       <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
         <div>
           <SearchIconWrapper>
