@@ -14,7 +14,7 @@ import LikedToiletList from "./Components/LikedToiletList";
 import Map from "./Components/Map";
 import AuthForm from "./Components/AuthForm";
 import Account from "./Components/Account";
-import { useUserContext } from "./Components/contextAuthForm";
+import { useUserContext } from "./Components/ContextAuthForm";
 import { orderByDistance } from "geolib";
 
 import Stack from "@mui/material/Stack";
@@ -32,18 +32,21 @@ function App() {
   const navigate = useNavigate();
   // initialise initial states and set states
   const [user, setUser] = useState({ email: "" });
-  const [toiletsData, setToiletsData] = useState([]);
   const [usersLikesData, setUsersLikesData] = useState({ 0: null });
   const [userLocation, setUserLocation] = useState({ lat: 0, lng: 0 });
-  const [nearbyToilets, setNearbyToilets] = useState([]);
-  const [map, setMap] = useState();
-  const [isOpen, setIsOpen] = useState(false);
-  const [infoWindowData, setInfoWindowData] = useState();
-  const [showNearbyToilets, setShowNearbyToilets] = useState(false);
+
   const [showAuthForm, setShowAuthForm] = useState(false);
   const [showSignInContent, setShowSignInContent] = useState(true);
   const { error } = useUserContext();
+
+  const [toiletsData, setToiletsData] = useState([]);
   const [toiletRatingsData, setToiletRatingsData] = useState([]);
+  const [nearbyToilets, setNearbyToilets] = useState([]);
+  const [showNearbyToilets, setShowNearbyToilets] = useState(false);
+
+  const [map, setMap] = useState();
+  const [isOpen, setIsOpen] = useState(false);
+  const [infoWindowData, setInfoWindowData] = useState();
   const location = useLocation();
   const [searchedToilets, setSearchedToilets] = useState([]);
 

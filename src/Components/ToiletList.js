@@ -12,8 +12,6 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 // toilet button
 import Button from "@mui/material/Button";
 
-import TableRow from "@mui/material/TableRow";
-
 // color of like hearts
 const StyledRating = styled(Rating)({
   "& .MuiRating-iconFilled": {

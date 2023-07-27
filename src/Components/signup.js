@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { useUserContext } from "./contextAuthForm";
+import { useUserContext } from "./ContextAuthForm";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 
@@ -26,9 +26,11 @@ const Signup = () => {
         <input placeholder="Email" type="email" ref={emailRef} />
         <input placeholder="Name" type="name" ref={nameRef} />
         <input placeholder="Password" type="password" ref={psdRef} />
+        <br />
         <Button variant="contained" type="submit">
           Sign Up
         </Button>
+        <br />
       </form>
     </div>
   );

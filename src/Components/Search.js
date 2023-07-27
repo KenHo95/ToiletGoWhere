@@ -53,11 +53,9 @@ const Header = (props) => {
       latitude: lat,
       longitude: lng,
     });
-
     props.map?.panTo({ lat, lng });
     props.map?.setZoom(16);
     props.setIsOpen(true);
-    // props.setShowNearbyToilets(true); // Set showNearbyToilets to true
     props.setShowSearchedToilets(true);
   };
 
