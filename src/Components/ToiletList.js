@@ -53,12 +53,12 @@ function ToiletList(props) {
   // create toilet list from toilet data
   let toiletsListItems = props.toiletsToDisplay.map(
     ({ Address, Area, Name, Type, id, lat, lng }) => (
-      <div>
+      <div key={id}>
         {/* Switch between main and liked toilet list */}
         {(props.urlId === "LikedToiletList"
           ? props.usersLikesData[id] // render if user toilet like is true, else dont render
           : true) && (
-          <li className={"toilet-item"} key={id}>
+          <li className={"toilet-item"}>
             {/* like button
              */}
             <StyledRating

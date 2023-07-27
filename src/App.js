@@ -49,6 +49,7 @@ function App() {
   const [infoWindowData, setInfoWindowData] = useState();
   const location = useLocation();
   const [searchedToilets, setSearchedToilets] = useState([]);
+  const [showSearchedToilets, setShowSearchedToilets] = useState(false);
 
   //////////////////////////////////////////
   // Functions to get data from firebase //
@@ -140,18 +141,12 @@ function App() {
       coordsArray.push({ latitude: toilet.lat, longitude: toilet.lng })
     );
 
-    // add ID info to determine liked toilets
-    let toiletsDataWithID = toiletsData.map((toilet, index) => ({
-      ...toilet,
-      id: index,
-    }));
-
     // get five nearest toilets to user location
     let nearestToilets = orderByDistance(userLocation, coordsArray).slice(
       0,
       NO_OF_NEARBY_TOILETS
     );
-    let result = toiletsDataWithID.filter((toilet) => {
+    let result = toiletsData.filter((toilet) => {
       return nearestToilets.some((nearestToilet) => {
         return toilet.lat === nearestToilet.latitude;
       });
@@ -192,14 +187,8 @@ function App() {
   // Other functions //
   /////////////////////
 
-  // add ID info to determine liked toilets
-  let toiletsDataWithID = toiletsData.map((toilet, index) => ({
-    ...toilet,
-    id: index,
-  }));
-
   // toggle between full and nearby toilets display
-  let toiletsToDisplay = showNearbyToilets ? nearbyToilets : toiletsDataWithID;
+  let toiletsToDisplay = showNearbyToilets ? nearbyToilets : toiletsData;
 
   useEffect(() => {
     // Reset the sign in redirect state when user navigates elsewhere
@@ -369,20 +358,23 @@ function App() {
                     map={map}
                     toiletsData={toiletsData}
                     setSearchedToilets={setSearchedToilets}
+                    setShowSearchedToilets={setShowSearchedToilets}
                   />
-                  <ToiletList
-                    toiletsToDisplay={
-                      searchedToilets.length > 0
-                        ? searchedToilets
-                        : toiletsToDisplay
-                    }
-                    usersLikesData={usersLikesData}
-                    userEmail={user.email} // Pass the user.email value as the userEmail prop
-                    handleMarkerClick={handleMarkerClick}
-                    showNearbyToilets={showNearbyToilets}
-                    getAvgRatings={getAvgRatings}
-                    user={user}
-                  />
+                  {showSearchedToilets && (
+                    <ToiletList
+                      toiletsToDisplay={
+                        searchedToilets.length > 0
+                          ? searchedToilets
+                          : toiletsToDisplay
+                      }
+                      usersLikesData={usersLikesData}
+                      userEmail={user.email} // Pass the user.email value as the userEmail prop
+                      handleMarkerClick={handleMarkerClick}
+                      showNearbyToilets={showNearbyToilets}
+                      getAvgRatings={getAvgRatings}
+                      user={user}
+                    />
+                  )}
                 </div>
               ) : (
                 signInButton("Sign in to continue your toilet search!")

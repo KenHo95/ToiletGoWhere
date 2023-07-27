@@ -28,8 +28,6 @@ function ReviewList(props) {
   const [selectToiletAddress, setSelectToiletAddress] = useState([]);
   const [toiletReviewsData, setToiletReviewsData] = useState([]);
   const { error } = useUserContext();
-  // const [showAuthForm, setShowAuthForm] = useState(false);
-  const [showSignInContent, setShowSignInContent] = useState(true);
   const navigate = useNavigate();
 
   let { id } = useParams(); // get selected toilet from url params as this persist after user refreshes page
