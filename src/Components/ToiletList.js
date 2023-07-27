@@ -83,7 +83,7 @@ function ToiletList(props) {
                 props.handleMarkerClick(id, lat, lng, Address);
               }}
               className="toilet-button"
-              sx={{ minWidth: "350px" }} // res to show nicely for mobile and web
+              sx={{ "min-width": "350px" }} // res to show nicely for mobile and web
             >
               {/* show address without postal code to reduce clutter on mobile
               display */}
