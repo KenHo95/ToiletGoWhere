@@ -12,8 +12,6 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 // toilet button
 import Button from "@mui/material/Button";
 
-import TableRow from "@mui/material/TableRow";
-
 // color of like hearts
 const StyledRating = styled(Rating)({
   "& .MuiRating-iconFilled": {
@@ -83,7 +81,7 @@ function ToiletList(props) {
                 props.handleMarkerClick(id, lat, lng, Address);
               }}
               className="toilet-button"
-              sx={{ "min-width": "350px" }} // res to show nicely for mobile and web
+              sx={{ minWidth: "350px" }} // res to show nicely for mobile and web
             >
               {/* show address without postal code to reduce clutter on mobile
               display */}

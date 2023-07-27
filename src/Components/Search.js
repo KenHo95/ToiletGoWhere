@@ -34,7 +34,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(2)})`,
     transition: theme.transitions.create("width"),
-    "min-width": "240px",
+    minWidth: "240px",
   },
 }));
 
@@ -54,7 +54,6 @@ const Header = (props) => {
     props.map?.panTo({ lat, lng });
     props.map?.setZoom(16);
     props.setIsOpen(true);
-    props.setShowNearbyToilets(true); // Set showNearbyToilets to true
     props.setShowSearchedToilets(true);
   };
 
