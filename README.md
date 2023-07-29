@@ -9,11 +9,12 @@ A WebApp that allows users to look for the best toilets in Singapore and rate th
 ## 📚 What we learnt
 
 - To build a React app with functional components.
-- To apply React Router, enabling client-side routing. We used the useParams function to allow WebPage information to persist after user refreshes the page.
+- To use Material UI to build the UI Components of the app.
 - To leverage Google Maps and Places API to provide real-time navigational features and location suggestions to users.
-- To use Firebase products such as Realtime Database and Storage to build the backend, Firebase Authentication to provide user identity for our app, and Firebase Hosting to host this app.
-- To use Material UI's components to build the app. We used icons to further highlight what each of our app components does or shows.
+- To apply React Router, enabling client-side routing. We used the useParams function to allow WebPage information to persist after user refreshes the page.
 - To leverage third-party libraries like Geolib to perform geospatial computation. We used Geolib's orderByDistance function to sort the nearest toilets to the user's or searched location by coordinates.
+- To use Firebase products such as Realtime Database and Storage to build the backend, Firebase Authentication to provide user identity for our app, and Firebase Hosting to host this app.
+
 
 ## 📜 Running in local
 
