@@ -12,7 +12,7 @@ A WebApp that allows users to look for the best toilets in Singapore and rate th
 - To use Material UI to build the UI Components of the app.
 - To leverage Google Maps and Places API to provide real-time navigational features and location suggestions to users.
 - To apply React Router, enabling client-side routing. We used the useParams function to allow WebPage information to persist after user refreshes the page.
-- To leverage third-party libraries like Geolib to perform geospatial computation. We used Geolib's orderByDistance function to sort the nearest toilets to the user's or searched location by coordinates.
+- To leverage the Geolib library to perform geospatial computation. We used Geolib's orderByDistance function to sort the nearest toilets to the user's or searched location by coordinates.
 - To use Firebase products such as Realtime Database and Storage to build the backend, Firebase Authentication to provide user identity for our app, and Firebase Hosting to host this app.
 
 
@@ -31,9 +31,9 @@ Make sure you have Node.js and npm installed on your machine before proceeding w
 ## 🌈 Features
 
 - Toilets and User Location Display on Google Maps: Users can see their current location and toilets in Singapore along with their rating and reviews.
+- Search: Allow users to search for nearby toilets from the specified search address.
 - Show Nearby Toilets: Show nearby toilets based on the user's current or searched location.
 - User Authentication: Users can create an account and authenticate themselves to access additional features for a personalized experience.
-- Search: Allow users to search for nearby toilets from the specified search address.
 - Save Toilets' Location: Authenticated users can save toilets' locations as their favorites.
 - Review Toilets + See Reviews: Users can submit reviews and ratings for toilets they have visited. Other users are able to see reviews submitted in real-time.
 
